@@ -1,0 +1,37 @@
+<%- include('../partials/header') %>
+
+    <body>
+        <form action="" method="POST" class="">
+            <input type="hidden" name="page" value="1">
+            <div class="row my-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label class="form-check-label" id="projectid" name="projectid">ID
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" readonly type="text" aria-label="default input example" name="projectid" id="projectid" value="<%= data.projectid %>">
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label class="form-check-label" id="pname" name="pname"> Nama Project
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="text"aria-label="default input example" name="pname" id="pname" value="<%= data.pname %>">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <input class="btn btn-primary" type="submit" value="Save">
+                </div>
+                <div class="col-sm-2">
+                    <a href="/" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </body>
+
+    </html>
