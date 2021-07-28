@@ -18,7 +18,7 @@ module.exports = function (db) {
         return res.redirect('/login')
       }
       if (data.rows.length == 0) {
-        req.flash('info', 'E-Mail atau Password tidak ditemukan!')
+        req.flash('info', "You dumb or what? there's nothing like that in this site!!")
         return res.redirect('/login')
       }
 
@@ -27,7 +27,7 @@ module.exports = function (db) {
           req.session.user = data.rows[0]
           return res.redirect('/')
         } else {
-          req.flash('info', 'Password Salah, ulangi!')
+          req.flash('info', 'You forgot your password? Such a Dumbass you are!!')
           return res.redirect('/login')
         }
       });

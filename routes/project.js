@@ -15,7 +15,7 @@ module.exports = function (db) {
             .catch(e => console.error(e))
     })
     router.post('/AddProject', helpers.isLoggedIn, function (req, res, next) {
-        db.query(`insert into projects(pname),members(userid) values($1, $2)`, [req.body.pname, req.body.userid])
+        db.query(`insert into projects(name),members(userid) values($1, $2)`, [req.body.pname, req.body.userid])
             .then(res.redirect('/'))
     })
     router.get('/DeleteProject/:id', helpers.isLoggedIn, function (req, res, next) {
@@ -29,7 +29,7 @@ module.exports = function (db) {
             })
     })
     router.post('/EditProject/:id', helpers.isLoggedIn, function (req, res, next) {
-        db.query('update projects set projectid = $1, pname = $2'[req.body.id, req.body.pname])
+        db.query('update projects set projectid = $1, name = $2'[req.body.projectid, req.body.pname])
             .then(res.redirect('/'))
     })
 

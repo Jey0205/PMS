@@ -25,11 +25,23 @@
               </li>
             </ul>
             <form class="sign-out">
-              <a href="/logout"class="btn btn-outline-success">Sign-Out</a>
+              <a href="/logout"class="btn btn-outline-success" onclick="signout()" id="signout" name="signout">Sign-Out</a>
             </form>
           </div>
         </div>
       </nav>
-      
+      <script>
+        function signout() {
+         var popup = confirm('are you sure you wanna log-out?')
+          popup
+          if(popup){
+            window.location.href = '/logout'
+            alert(`you has been log out`)
+          }else{
+            window.location.href = '/'
+          }
+        }
+      </script>
+
 </head>
 <body>
