@@ -3,7 +3,7 @@
         <h2 style="font-family: monospace;"> Profile </h2>
     </div>
 
-    <form action="" method="GET" class="">
+    <form action="" method="POST">
         <input type="hidden" name="page" value="1">
         <div class="row">
             <div class="col-sm-1"></div>
@@ -11,32 +11,34 @@
                 <label for="E-mail">E-mail</label>
             </div>
             <div class="col-sm-8">
-                <input class="form-control" readonly type="email" aria-label="default input example"
-                    name="proMail" value="<%= email.email %>">
+                <input class="form-control" readonly type="email" aria-label="default input example" name="proMail"
+                    value="<%= session.email %>">
             </div>
         </div>
-        <div class="row mb-3">
+        <div class="row my-3">
             <div class="col-sm-1"></div>
             <div class="col-sm-1">
                 <label for="position">Position
             </div>
             <div class="col-sm-8">
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="manager" id="manager" value="Manager">
+                    <input class="form-check-input" type="radio" name="options" id="manager" value="Manager">
                     <label class="form-check-label" for="manager">
                         Manager
                     </label>
-                </div>
-                <div class="col-sm-8">
-                    <input class="form-check-input" type="radio" name="softwareDev" id="softwareDev" value="Software Developer">
-                    <label class="form-check-label" for="softwareDev">
-                        Software Developer
+                    <div class="col-sm-8">
+                        <input class="form-check-input" type="radio" name="options" id="softwareDev"
+                            value="Software Developer">
+                        <label class="form-check-label" for="softwareDev">
+                            Software Developer
+                        </label>
+                    </div>
+                    <input class="form-check-input" type="radio" name="options" id="qualityAs"
+                        value="Quality Assurance">
+                    <label class="form-check-label" for="qualityAs">
+                        Quality Assurance
                     </label>
                 </div>
-                <input class="form-check-input" type="radio" name="qualityAs" id="qualityAs" value="Quality Assurance">
-                <label class="form-check-label" for="qualityAs">
-                    Quality Assurance
-                </label>
             </div>
         </div>
         <div class="row my-3">
@@ -45,8 +47,8 @@
                 <label for="type">Type</label>
             </div>
             <div class="col-sm-8">
-                <input class="form-check-input" type="checkbox"
-                    aria-label="default input example" name="typeFt" id="typeFt">Fulltime
+                <input class="form-check-input" type="checkbox" aria-label="default input example" name="typeFt" 
+                    id="typeFt">Fulltime
             </div>
         </div>
         <div class="row mb-3">
