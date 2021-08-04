@@ -1,0 +1,75 @@
+<%- include('../../partials/header') %>
+    <%- include('../../partials/sidenav') %>
+        <div class="container-fluid">
+
+            <body>
+                <div class="row mb-3 border-bottom">
+                <h2> Edit Members </h2>
+                </div>
+                <form action="" method="POST" class="">
+                    <input type="hidden" name="page" value="1">
+                    <div class="row my-3">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-1">
+                            <label class="form-check-label" id="projectNama" name="projectNama">Nama Members
+                        </div>
+                        <div class="col-sm-8">
+                            <select class="form-select ;" aria-label="Default select example" id="namelist"
+                                name="namelist">
+                                <option selected hidden>Choose The Members</option>
+                                <% nama.forEach((name)=>{ %>
+                                    <option value="<%= name.userid %>">
+                                        <%= name.firstname + ' ' + name.lastname %>
+                                    </option>
+                                    <% }) %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-1">
+                            <label class="form-check-label" id="projectNama" name="projectNama">Daftar Project
+                        </div>
+                        <div class="col-sm-8">
+                            <select class="form-select ;" aria-label="Default select example" id="proslist"
+                                name="proslist">
+                                <option selected hidden>Choose The Projects</option>
+                                <% project.forEach((project)=>{ %>
+                                    <option value="<%= project.projectid %>">
+                                        <%= project.name %>
+                                    </option>
+                                    <% }) %>
+                            </select>
+                        </div>
+                    </div>
+
+                    <% nama.forEach((item)=> { %>
+                        <div class="row mb-3">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-8">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="poscheck" id="poscheck"
+                                        value="<%= item.position %>">
+                                    <label class="form-check-label" for="idOpt">
+                                        <%= item.position %>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <% }); %>
+
+
+                            <div class="row mb-3">
+                                <div class="col-sm-1"></div>
+                                <div class="col-sm-1">
+                                    <input class="btn btn-primary" type="submit" value="Save">
+                                </div>
+                                <div class="col-sm-2">
+                                    <a href="/members/<%= projectid %>" class="btn btn-danger">Cancel</a>
+                                </div>
+                            </div>
+                </form>
+            </body>
+        </div>
+
+        </html>

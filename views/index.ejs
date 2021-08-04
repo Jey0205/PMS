@@ -9,34 +9,40 @@
         <div class="row">
             <div class="col-sm-1"></div>
             <div class="col-sm-1">
-                <input class="form-check-input" type="checkbox" id="checkProjectid" name="checkProjectid" onclick="proid()" <%= projectid ? ' checked' : '' %> >ID
+                <input class="form-check-input" type="checkbox" id="checkProjectid" name="checkProjectid"
+                    onclick="proid()" <%=projectid ? ' checked' : '' %> >ID
             </div>
             <div class="col-sm-8">
-                <input class="form-control" type="text" placeholder="ID ..." aria-label="default input example"
-                    name="projectid" id="projectid" <%= projectid ? '' : ' disabled' %> >
+                <input class="form-control" type="number" placeholder="ID ..." aria-label="default input example"
+                    name="projectid" id="projectid" <%=projectid ? '' : ' disabled' %> >
             </div>
         </div>
         <div class="row my-3">
             <div class="col-sm-1"></div>
             <div class="col-sm-1">
-                <input class="form-check-input" type="checkbox" id="checkName" name="checkName" onclick="nameclick()" <%= name ? ' checked' : '' %> >Name
+                <input class="form-check-input" type="checkbox" id="checkName" onclick="nameclick()" <%=name
+                    ? ' checked' : '' %> >Name
             </div>
             <div class="col-sm-8">
-                <input class="form-control" type="text" placeholder="Name ..." aria-label="default input example" id="name"
-                    name="name" <%= name ? '' : ' disabled' %>  >
+                <input class="form-control" type="text" placeholder="Name ..." aria-label="default input example"
+                    id="name" name="name" <%=name ? '' : ' disabled' %> >
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-sm-1"></div>
             <div class="col-sm-1">
-                <input class="form-check-input" type="checkbox" id="checkMembers" name="checkMembers" onclick="membersclick()" <%= members ? ' checked' : '' %> >Member
+                <input class="form-check-input" type="checkbox" id="checkMembers" name="checkMembers"
+                    onclick="membersclick()" <%=members ? ' checked' : '' %> >Member
             </div>
             <div class="col-sm-8">
-                <select class="form-select ;" aria-label="Default select example" id="members" name="members" <%= members ? '' : ' disabled' %>  >
+                <select class="form-select ;" aria-label="Default select example" id="members" name="members" <%=members
+                    ? '' : ' disabled' %> >
                     <option selected hidden>Choose The Member...</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                    <% names.forEach((nama)=>{ %>
+                        <option value="<%= nama.userid %>">
+                            <%= nama.firstname + ' ' + nama.lastname %>
+                        </option>
+                        <% }) %>
                 </select>
             </div>
         </div>
@@ -52,30 +58,33 @@
         </div>
     </form>
 
-    <form action="">
+    <form action="" method="POST">
         <h3 style="font-family: monospace;">Options</h3>
 
-         <div class="row mb-3">
+        <div class="row mb-3">
             <div class="col-sm-1"></div>
             <div class="col-sm-1">
-                <label for="position">Position
+                <label for="position">Column
             </div>
             <div class="col-sm-8">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="idOpt" id="idOpt" >
+                    <input class="form-check-input" type="checkbox" name="idOpt" id="idOpt" <%= option['idOpt']
+                        ? ' checked' : '' %> >
                     <label class="form-check-label" for="idOpt">
                         ID
                     </label>
                 </div>
                 <div class="col-sm-8">
-                    <input class="form-check-input" type="checkbox" name="nameOpt" id="nameOpt"  >
+                    <input class="form-check-input" type="checkbox" name="nameOpt" id="nameOpt" <%= option['nameOpt']
+                        ? ' checked' : '' %> >
                     <label class="form-check-label" for="nameOpt">
-                       Name
+                        Name
                     </label>
                 </div>
-                <input class="form-check-input" type="checkbox" name="memOpt" id="memOpt"  >
+                <input class="form-check-input" type="checkbox" name="memOpt" id="memOpt" <%= option['memOpt']
+                    ? ' checked' : '' %> >
                 <label class="form-check-label" for="memOpt">
-                   Members
+                    Members
                 </label>
             </div>
         </div>
@@ -93,90 +102,110 @@
     <form action="">
         <table class="table table-dark table-stripped">
             <tr>
-                <th id="tableId" >#</th>
-                <th id="tableName" >Name</th>
-                <th id="tableMembers" >Members</th>
-                <th>Action</th>
+                <% if(option['idOpt']) { %>
+                    <th id="tableId">#</th>
+                    <% } if(option['nameOpt']) { %>
+                        <th id="tableName">Name</th>
+                        <% } if(option['memOpt']) {%>
+                            <th id="tableMembers">Members</th>
+                            <% } %>
+                                <th>Action</th>
             </tr>
             <% data.forEach((item)=>{ %>
                 <tr>
-                    <td>
-                        <a href="#"> <%= item.projectid %> </a>
-                    </td>
-                        <%= item.pname %>
-                    </td>
-                    <td>
-                        <%= item.userid %>
-                    </td>
-                    <td>
-                        <%= item.members %>
-                    </td>
-                    <td> <a href="/project/EditProject/<%= item.projectid %>" class="btn btn-success">Edit</a>
-                        <a href="/project/DeleteProject/<%= item.projectid %>" class="btn btn-danger" onclick="delClick">Delete</a>
-                    </td>
+                    <% if(option['idOpt']) { %>
+                        <td>
+                            <a href="/overview/<%= item.projectid %>">
+                                <%= item.projectid %>
+                            </a>
+                        </td>
+                        <% } if(option['nameOpt']) { %>
+                            <td>
+                                <%= item.name %>
+                            </td>
+                            <% } if(option['memOpt']) {%>
+                                <td>
+                                    <%= item.members %>
+                                </td>
+                                <% } %>
+                                    <td>
+                                        <a href="/project/EditProject/<%= item.projectid %>"
+                                            class="btn btn-success">Edit</a>
+                                        <a href="/project/DeleteProject/<%= item.projectid %>" class="btn btn-danger"
+                                            onclick="delClick">Delete</a>
+                                    </td>
 
                 </tr>
                 <% }) %>
         </table>
-        <div class="row my-3">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-1">
-                <a href="/project/AddProject" class='btn btn-lg btn-primary'>Add</a>
-            </div>
-        </div>
-
         <div class="justify-content-center">
             <nav aria-label="Page navigation example">
-              <ul class="pagination justify-content-center">
-                <li class="page-item <%= page > 1 ? '' : 'disabled' %> ">
-                  <a class="page-link" href="<%= url.replace(`page=${page}`, `page=${page - 1}`)%>">Previous</a>
-                </li>
-                <% for(let i = 1; i <= pages; i++){ %> 
-                <li class="page-item <%= page == i ? 'active' : '' %> "><a class="page-link" href="<%= url.replace(`page=${page}`, `page=${i}`) %>"><%= i %> </a></li>
-                <% } %> 
-                <li class="page-item <%= page < pages ? '' : 'disabled' %> ">
-                  <a class="page-link" href="<%= url.replace(`page=${page}`, `page=${page + 1}`)%>">Next</a>
-                </li>
-              </ul>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item <%= page > 1 ? '' : 'disabled' %> ">
+                        <a class="page-link" href="<%= url.replace(`page=${page}`, `page=${page - 1}`)%>">Previous</a>
+                    </li>
+                    <% for(let i=1; i <=pages; i++){ %>
+                        <li class="page-item <%= page == i ? 'active' : '' %> "><a class="page-link"
+                                href="<%= url.replace(`page=${page}`, `page=${i}`) %>">
+                                <%= i %>
+                            </a></li>
+                        <% } %>
+                            <li class="page-item <%= page < pages ? '' : 'disabled' %> ">
+                                <a class="page-link"
+                                    href="<%= url.replace(`page=${page}`, `page=${page + 1}`)%>">Next</a>
+                            </li>
+                </ul>
             </nav>
-          </div>
-        
+        </div>
+
 
     </form>
 
-<script>
-    function delClick() {
-        confirm('Are you sure?')
+    <div class="row my-3">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-1">
+            <a href="/project/AddProject" class="btn btn-primary">Add</a>
+        </div>
+    </div>
+
+  
+
+    <script>
+        function delClick() {
+            confirm('Are you sure?')
             alert('really?')
-    }
-
-    function proid(){
-        const check = document.getElementById('checkProjectid')
-        if(check.checked == true){
-            document.getElementById('projectid').disabled = false;
-        }else{
-            document.getElementById('projectid').disabled = true;
         }
-    }
 
-    function nameclick(){
-        const check = document.getElementById('checkName')
-        if(check.checked == true){
-            document.getElementById('name').disabled = false;
-        }else{
-            document.getElementById('name').disabled = true;
+        function proid() {
+            const check = document.getElementById('checkProjectid')
+            if (check.checked == true) {
+                document.getElementById('projectid').disabled = false;
+            } else {
+                document.getElementById('projectid').disabled = true;
+            }
         }
-    }
 
-    function membersclick(){
-        const check = document.getElementById('checkMembers')
-        if(check.checked == true){
-            document.getElementById('members').disabled = false;
-        }else{
-            document.getElementById('members').disabled = true;
+        function nameclick() {
+            const check = document.getElementById('checkName')
+            if (check.checked == true) {
+                document.getElementById('name').disabled = false;
+            } else {
+                document.getElementById('name').disabled = true;
+            }
         }
-    }
-    
-</script>
+
+        function membersclick() {
+            const check = document.getElementById('checkMembers')
+            if (check.checked == true) {
+                document.getElementById('members').disabled = false;
+            } else {
+                document.getElementById('members').disabled = true;
+            }
+        }
+
+
+    </script>
+
+
 
     <%- include('./partials/footer') %>

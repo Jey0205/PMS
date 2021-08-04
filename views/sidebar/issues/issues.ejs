@@ -1,0 +1,208 @@
+<%- include('../../partials/header') %>
+    <%- include('../../partials/sidenav') %>
+
+    <div class="container-fluid">
+        <div class="row mb-3 border-bottom">
+            <h2 style="font-family: monospace;">Issues</h2>
+        </div>
+        <h3 style="font-family: monospace;">Filters</h3>
+        <form action="" method="GET" class="">
+            <input type="hidden" name="page" value="1">
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <input class="form-check-input" type="checkbox" id="checkIssueid" name="checkIssueid"
+                        onclick="isuid()" <%=issueid ? ' checked' : '' %> >ID
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="number" placeholder="ID ..." aria-label="default input example"
+                        name="issueid" id="issueid" <%=issueid ? '' : ' disabled' %> >
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <input class="form-check-input" type="checkbox" id="checkSubject" onclick="subjectclick()" <%=subject
+                        ? ' checked' : '' %> >Subject
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="text" placeholder="Subject ..." aria-label="default input example"
+                        id="subject" name="subject" <%=subject ? '' : ' disabled' %> >
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <input class="form-check-input" type="checkbox" id="checkTracker" name="checkTracker"
+                        onclick="trackerclick()" <%=tracker ? ' checked' : '' %> >Tracker
+                </div>
+                <div class="col-sm-8">
+                    <select class="form-select ;" aria-label="Default select example" id="tracker" name="tracker" <%=tracker
+                        ? '' : ' disabled' %> >
+                        <option selected hidden>Choose The Tracker ...</option>
+                        <% issue.forEach((isu)=>{ %>
+                            <option value="<%= isu.issueid %>">
+                                <%= isu.issueid %>
+                            </option>
+                            <% }) %>
+                    </select>
+                </div>
+            </div>
+    
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <input class="btn btn-primary" type="submit" value="Search">
+                </div>
+                <div class="col-sm-2">
+                    <a href="#" class="btn btn-danger">Reset</a>
+                </div>
+            </div>
+        </form>
+
+        <form action="" method="POST">
+            <h3 style="font-family: monospace;">Options</h3>
+
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="position">Column
+                </div>
+                <div class="col-sm-8">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="idIsu" id="idIsu" <%= optionisu['idIsu']
+                            ? ' checked' : '' %> >
+                        <label class="form-check-label" for="idIsu">
+                            ID
+                        </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input class="form-check-input" type="checkbox" name="subjectOpt" id="subjectOpt"
+                            <%= optionisu['subjectOpt'] ? ' checked' : '' %> >
+                        <label class="form-check-label" for="subjectOpt">
+                            Subject
+                        </label>
+                    </div>
+                    <input class="form-check-input" type="checkbox" name="trackerOpt" id="trackerOpt" <%= optionisu['trackerOpt']
+                        ? ' checked' : '' %> >
+                    <label class="form-check-label" for="trackerOpt">
+                        Tracker
+                    </label>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <input class="btn btn-sm btn-primary" type="submit" value="Apply">
+                </div>
+            </div>
+
+        </form>
+
+
+        <form action="">
+            <table class="table table-dark table-stripped">
+                <tr>
+                    <% if(optionisu['idIsu']) { %>
+                        <th id="tableId">#</th>
+                        <% } if(optionisu['subjectOpt']) { %>
+                            <th id="tableName">Subject</th>
+                            <% } if(optionisu['trackerOpt']) { %>
+                                <th id="tableposition">Tracker</th>
+                                <% } %>
+                                    <th>Action</th>
+                </tr>
+                <% issue.forEach((item, index)=>{ %>
+                    <tr>
+                        <% if(optionisu['idIsu']) { %>
+                            <td>
+                                <%=item.issueid%>
+                            </td>
+                            <% } if(optionisu['subjectOpt']) { %>
+                                <td>
+                                    <%= item.subject %>
+                                </td>
+                                <% } if(optionisu['trackerOpt']) { %>
+                                    <td>
+                                        <%= item.tracker %>
+                                    </td>
+                                    <% } %>
+                                        <td>
+                                            <a href="/issues/<%= projectid %>/edit/<%= item.issueid %>"
+                                                class="btn btn-success">Edit</a>
+                                            <a href="/issues/<%= projectid %>/delete/<%= item.issueid %>" class="btn btn-danger"
+                                                onclick="delClick">Delete</a>
+                                        </td>
+
+                    </tr>
+                    <% }) %>
+            </table>
+            <div class="justify-content-center">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item <%= page > 1 ? '' : 'disabled' %> ">
+                            <a class="page-link"
+                                href="<%= url.replace(`page=${page}`, `page=${page - 1}`)%>">Previous</a>
+                        </li>
+                        <% for(let i=1; i <=pages; i++){ %>
+                            <li class="page-item <%= page == i ? 'active' : '' %> "><a class="page-link"
+                                    href="<%= url.replace(`page=${page}`, `page=${i}`) %>">
+                                    <%= i %>
+                                </a></li>
+                            <% } %>
+                                <li class="page-item <%= page < pages ? '' : 'disabled' %> ">
+                                    <a class="page-link"
+                                        href="<%= url.replace(`page=${page}`, `page=${page + 1}`)%>">Next</a>
+                                </li>
+                    </ul>
+                </nav>
+            </div>
+        </form>
+
+        <div class="row my-3">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-1">
+             <a href="/issues/<%= projectid %>/addissues" class="btn btn-lg btn-primary">Add</a>
+            </div>
+        </div>
+
+
+
+
+    </div>
+    <script>
+        function delClick() {
+            confirm('Are you sure?')
+            alert('really?')
+        }
+
+        function isuid() {
+            const check = document.getElementById('checkIssueid')
+            if (check.checked == true) {
+                document.getElementById('issueid').disabled = false;
+            } else {
+                document.getElementById('issueid').disabled = true;
+            }
+        }
+
+
+        function subjectclick() {
+            const check = document.getElementById('checkSubject')
+            if (check.checked == true) {
+                document.getElementById('subject').disabled = false;
+            } else {
+                document.getElementById('subject').disabled = true;
+            }
+        }
+
+        function trackerclick() {
+            const check = document.getElementById('checkTracker')
+            if (check.checked == true) {
+                document.getElementById('tracker').disabled = false;
+            } else {
+                document.getElementById('tracker').disabled = true;
+            }
+        }
+
+    </script>
+<%- include('../../partials/footer') %>
