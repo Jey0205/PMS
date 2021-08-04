@@ -21,18 +21,32 @@
     <body class="text-center">
       <form class="form-signin">
         <img class="mb-4" src="/images/loginlogo.png"  width="300" height="300">
-        <h1 class="h3 mb-3 font-weight-bold">Please sign in</h1>
-        <label for="inputEmail" class="sr-only">E-mail</label>
-        <input type="email" id="email" class="form-control" placeholder="Hey, put your goddamn E-mail! .." name="email"required="" autofocus="">
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="password" class="form-control" name="password" placeholder="So .. What's your Password? .." required="">
+        <h1 class="h3 mb-3 font-weight-bold">Sign in</h1>
+        <div class="row my-3">
+          <div class="col-sm-1"></div>
+          <div class="col-sm-1">
+          </div>
+          <div class="col-sm-8">
+              <input class="form-control-file" type="email" placeholder="Email ..."
+                  aria-label="default input example" name="email" id="email">
+          </div>
+      </div>
+        <div class="row my-3">
+          <div class="col-sm-1"></div>
+          <div class="col-sm-1">
+          </div>
+          <div class="col-sm-8">
+              <input class="form-control-file" type="password" placeholder="Password ..."
+                  aria-label="default input example" name="password" id="password">
+          </div>
+      </div>
         <div class="checkbox mb-3">
           <label>
-            <input type="checkbox" value="remember-me"> Remember me, Bitch!
+            <input type="checkbox" value="remember-me"> Remember me
           </label>
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        <p class="mt-5 mb-3 text-muted">© 2021</p>
+        <p class="mt-5 mb-3 text-muted">© Fajar Nur Mulyana, 2021</p>
 
     <% if(info.length > 0) { %>
       <div class="alert alert-danger" role="alert">

@@ -1,0 +1,295 @@
+<%- include('../../partials/header') %>
+    <%- include('../../partials/sidenav') %>
+        <div class="container-fluid">
+            <div class="row mb-3 border-bottom">
+                <h2>
+                    New Issues
+                </h2>
+            </div>
+
+            <form action="" method="POST">
+            <div class="row my-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="tracker">Tracker
+                </div>
+                <div class="col-sm-8">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="options" id="bug" value="Bug">
+                        <label class="form-check-label" for="bug">
+                            Bug
+                        </label>
+                        <div class="col-sm-8">
+                            <input class="form-check-input" type="radio" name="options" id="feature" value="Feature">
+                            <label class="form-check-label" for="feature">
+                                Feature
+                            </label>
+                        </div>
+                        <input class="form-check-input" type="radio" name="options" id="support" value="Support">
+                        <label class="form-check-label" for="support">
+                            Support
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="tracker">
+                        Subject
+                    </label>
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="text" name="subject" id="subject">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="tracker">
+                        Description
+                    </label>
+                </div>
+                <div class="col-sm-8">
+                    <textarea name="description" id="description" cols="126" rows="3">
+
+                        </textarea>
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="status">Status
+                </div>
+                <div class="col-sm-8">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="optionStat" id="new" value="New">
+                        <label class="form-check-label" for="new">
+                            New
+                        </label>
+                        <div class="col-sm-8">
+                            <input class="form-check-input" type="radio" name="optionStat" id="inProgress"
+                                value="In Progress">
+                            <label class="form-check-label" for="inProgress">
+                                In Progress
+                            </label>
+                        </div>
+                        <input class="form-check-input" type="radio" name="optionStat" id="resolve" value="Resolve">
+                        <label class="form-check-label" for="resolve">
+                            Resolve
+                        </label>
+                        <div class="col-sm-8">
+                            <input class="form-check-input" type="radio" name="optionStat" id="new" value="Feedback">
+                            <label class="form-check-label" for="new">
+                                Feedback
+                            </label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input class="form-check-input" type="radio" name="optionStat" id="closed" value="Closed">
+                            <label class="form-check-label" for="closed">
+                                Closed
+                            </label>
+                        </div>
+                        <input class="form-check-input" type="radio" name="optionStat" id="rejected" value="Rejected">
+                        <label class="form-check-label" for="rejected">
+                            Rejected
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="tracker">Priority
+                </div>
+                <div class="col-sm-8">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="optionPrior" id="bug" value="Normal">
+                        <label class="form-check-label" for="bug">
+                            Normal
+                        </label>
+                        <div class="col-sm-8">
+                            <input class="form-check-input" type="radio" name="optionPrior" id="feature" value="High">
+                            <label class="form-check-label" for="feature">
+                                High
+                            </label>
+                        </div>
+                        <input class="form-check-input" type="radio" name="optionPrior" id="support" value="Urgent">
+                        <label class="form-check-label" for="support">
+                            Urgent
+                        </label>
+                        <div class="col-sm-8">
+                            <input class="form-check-input" type="radio" name="optionPrior" id="feature" value="Immediate">
+                            <label class="form-check-label" for="feature">
+                                Immediate
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label class="form-check-label" id="issueNama" name="issueNama">Assignee
+                </div>
+                <div class="col-sm-8">
+                    <select class="form-select ;" aria-label="Default select example" id="issueid"
+                        name="issueid">
+                        <option selected hidden>Choose Assignee...</option>
+                        <% nama.forEach((name)=>{ %>
+                            <option value="<%= name.userid %>">
+                                <%= name.firstname + ' ' + name.lastname %>
+                            </option>
+                            <% }) %>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="tracker">
+                        Start Date
+                    </label>
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="date" name="startDate" id="startDate">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="tracker">
+                        Start Date
+                    </label>
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="date" name="dueDate" id="dueDate">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="tracker">
+                       Estimated Time
+                    </label>
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="date" name="estimatedTime" id="estimatedTime">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="tracker">
+                      % Done
+                    </label>
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="number" name="percentage" id="percentage">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="tracker">
+                      Files
+                    </label>
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control-file" type="file" name="files" id="files">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="tracker">
+                      Time Spent
+                    </label>
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="number" name="spentTime" id="spentTime">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="tracker">
+                     Target Version
+                    </label>
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="number" name="targetVer" id="targetVer">
+                </div>
+            </div>
+
+            <div class="row my-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label class="form-check-label" id="issueNama" name="issueNama">Author
+                </div>
+                <div class="col-sm-8">
+                    <select class="form-select ;" aria-label="Default select example" id="issueid"
+                        name="issueid">
+                        <option selected hidden>Choose Author ...</option>
+                        <% nama.forEach((name)=>{ %>
+                            <option value="<%= name.userid %>">
+                                <%= name.firstname + ' ' + name.lastname %>
+                            </option>
+                            <% }) %>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="tracker">
+                       Created Date
+                    </label>
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="date" name="createdDate" id="createdDate">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="tracker">
+                       Update Date
+                    </label>
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="date" name="updateDate" id="updateDate">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="tracker">
+                       Closed Date
+                    </label>
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="date" name="closedDate" id="closedDate">
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <input class="btn btn-primary" type="submit" value="Update">
+                </div>
+                <div class="col-sm-2">
+                    <a href="/issues/<%= projectid %>" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+
+        </form>
+
+        </div>
+
+        <%- include('../../partials/footer') %>

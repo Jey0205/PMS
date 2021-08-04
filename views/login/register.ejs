@@ -1,96 +1,94 @@
 <%- include('../partials/header') %>
-    <div class="row mb-3 border-bottom">
-        <h2 style="font-family: monospace;"> Profile </h2>
-    </div>
 
-    <form action="" method="POST">
-        <input type="hidden" name="page" value="1">
-		<div class="row mb-3">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-1">
-                <label for="firstname">First Name</label>
-            </div>
-            <div class="col-sm-8">
-                <input class="form-control"  type="text" aria-label="default input example" name="firstname"
-                    >
-            </div>
+    <div class="container-fluid">
+        <div class="row mb-3 border-bottom">
+            <h2 style="font-family: monospace;"> Profile </h2>
         </div>
-		<div class="row mb-3">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-1">
-                <label for="lastname">Last Name</label>
-            </div>
-            <div class="col-sm-8">
-                <input class="form-control"  type="text" aria-label="default input example" name="lastname"
-                    >
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-1">
-                <label for="E-mail">E-mail</label>
-            </div>
-            <div class="col-sm-8">
-                <input class="form-control"  type="email" aria-label="default input example" name="email"
-                    >
-            </div>
-        </div>
-		<div class="row">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-1">
-                <label for="password">Password</label>
-            </div>
-            <div class="col-sm-8">
-                <input class="form-control"  type="password" aria-label="default input example" name="password"
-                    >
-            </div>
-        </div>
-        <div class="row my-3">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-1">
-                <label for="position">Position
-            </div>
-            <div class="col-sm-8">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="position" id="manager" value="Manager">
-                    <label class="form-check-label" for="manager">
-                        Manager
-                    </label>
-                    <div class="col-sm-8">
-                        <input class="form-check-input" type="radio" name="position" id="softwareDev"
-                            value="Software Developer">
-                        <label class="form-check-label" for="softwareDev">
-                            Software Developer
-                        </label>
-                    </div>
-                    <input class="form-check-input" type="radio" name="position" id="qualityAs"
-                        value="Quality Assurance">
-                    <label class="form-check-label" for="qualityAs">
-                        Quality Assurance
-                    </label>
+
+        <form action="" method="POST">
+            <input type="hidden" name="page" value="1">
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="firstname">First Name</label>
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="text" aria-label="default input example" name="firstname">
                 </div>
             </div>
-        </div>
-        <div class="row my-3">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-1">
-                <label for="type">Type</label>
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="lastname">Last Name</label>
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="text" aria-label="default input example" name="lastname">
+                </div>
             </div>
-            <div class="col-sm-8">
-                <input class="form-check-input" type="checkbox" aria-label="default input example" name="typeFt" 
-                    id="typeFt">Fulltime
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="E-mail">E-mail</label>
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="email" aria-label="default input example" name="email">
+                </div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-1">
-                <input class="btn btn-outline-primary" type="submit" value="Save User">
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="password">Password</label>
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="password" aria-label="default input example" name="password">
+                </div>
             </div>
-            <div class="col-sm-2">
-                <a href="/" class="btn btn-outline-danger">Cancel</a>
+            <div class="row my-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="position">Position
+                </div>
+                <div class="col-sm-8">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="position" id="manager" value="Manager">
+                        <label class="form-check-label" for="manager">
+                            Manager
+                        </label>
+                        <div class="col-sm-8">
+                            <input class="form-check-input" type="radio" name="position" id="softwareDev"
+                                value="Software Developer">
+                            <label class="form-check-label" for="softwareDev">
+                                Software Developer
+                            </label>
+                        </div>
+                        <input class="form-check-input" type="radio" name="position" id="qualityAs"
+                            value="Quality Assurance">
+                        <label class="form-check-label" for="qualityAs">
+                            Quality Assurance
+                        </label>
+                    </div>
+                </div>
             </div>
-        </div>
-    </form>
+            <div class="row my-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="type">Type</label>
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-check-input" type="checkbox" aria-label="default input example" name="typeFt"
+                        id="typeFt">Fulltime
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <input class="btn btn-outline-primary" type="submit" value="Save User">
+                </div>
+                <div class="col-sm-2">
+                    <a href="/" class="btn btn-outline-danger">Cancel</a>
+                </div>
+            </div>
+        </form>
 
-
+    </div>
     <%- include('../partials/footer') %>

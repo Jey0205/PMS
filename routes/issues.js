@@ -128,7 +128,7 @@ module.exports = function (db) {
 
   router.post('/:projectid/editissues', helpers.isLoggedIn, (req, res, next) =>{
     const projectid = req.params.projectid
-    db.query(`update issues set tracker = $1 , subject = $2 ,description = $3 ,status = $4 ,priority = $5 ,assignee = $6 ,startdate = $7,duedate = $8,estimatedtime = $9, done = $10 ,files = $11, spenttime = $12, targetversion = $13, author = $14, createddate = $15, updateddate = $16, closeddate = $17 where issueid = ${req.params.issueid}`,[])
+    db.query(`update issues set tracker = $1 , subject = $2 ,description = $3 ,status = $4 ,priority = $5 ,assignee = $6 ,startdate = $7,duedate = $8,estimatedtime = $9, done = $10 ,files = $11, spenttime = $12, targetversion = $13, author = $14, createddate = $15, updateddate = $16, closeddate = $17 where issueid = ${req.params.issueid}`,[req.body.option, req.body.subject, req.body.description, req.body.optionstat, req.body.prior, req.body.issueid, req.body.startDate, req.body.dueDate, req.body.estimatedTime, req.body.percentage, req.body.files])
     .then(res.redirect(`/issues/${projectid}`))
   })
 
