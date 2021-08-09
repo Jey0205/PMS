@@ -134,12 +134,12 @@ module.exports = function (db) {
         db.query(queryCount, (err, result) => {
             let total = result.rows.length;
             let pages = Math.ceil(total / limitTab);
-            db.query(querys, (err, data) => { console.log(data.rows);
+            db.query(querys, (err, data) => {
                 if (err) {
                     throw err;
                 }
                 db.query(
-                    "select optionmem from users where userid = $1", [req.session.user.userid], (err, option) => { console.log(option.rows[0].optionmem);
+                    "select optionmem from users where userid = $1", [req.session.user.userid], (err, option) => {
                         if (err) {
                             throw err;
                         }

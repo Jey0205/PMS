@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row mb-3 border-bottom">
                 <h2>
-                    New Issues
+                   Edit Issues
                 </h2>
             </div>
 
@@ -40,7 +40,7 @@
                     </label>
                 </div>
                 <div class="col-sm-8">
-                    <input class="form-control" type="text" name="subject" id="subject">
+                    <input class="form-control" type="text" name="subject" id="subject" placeholder="<%= issue.subject %>">
                 </div>
             </div>
             <div class="row mb-3">
@@ -52,7 +52,7 @@
                 </div>
                 <div class="col-sm-8">
                     <textarea name="description" id="description" cols="126" rows="3">
-
+                        <%= issue.description %>
                         </textarea>
                 </div>
             </div>
@@ -152,7 +152,7 @@
                     </label>
                 </div>
                 <div class="col-sm-8">
-                    <input class="form-control" type="date" name="startDate" id="startDate">
+                    <input class="form-control" type="date" name="startDate" id="startDate" placeholder="<%= issue.startdate %>">
                 </div>
             </div>
             <div class="row mb-3">
@@ -174,7 +174,7 @@
                     </label>
                 </div>
                 <div class="col-sm-8">
-                    <input class="form-control" type="date" name="estimatedTime" id="estimatedTime">
+                    <input class="form-control" type="number" step="0.01" name="estimatedTime" id="estimatedTime">
                 </div>
             </div>
             <div class="row mb-3">
@@ -208,7 +208,7 @@
                     </label>
                 </div>
                 <div class="col-sm-8">
-                    <input class="form-control" type="number" name="spentTime" id="spentTime">
+                    <input class="form-control" type="number" step="0.01" name="spentTime" id="spentTime">
                 </div>
             </div>
 
@@ -230,8 +230,8 @@
                     <label class="form-check-label" id="issueNama" name="issueNama">Author
                 </div>
                 <div class="col-sm-8">
-                    <select class="form-select ;" aria-label="Default select example" id="issueid"
-                        name="issueid">
+                    <select class="form-select ;" aria-label="Default select example" id="author"
+                        name="author">
                         <option selected hidden>Choose Author ...</option>
                         <% nama.forEach((name)=>{ %>
                             <option value="<%= name.userid %>">

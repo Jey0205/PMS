@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session')
 var flash = require('connect-flash');
+const fileUpload = require('express-fileupload');
 
 const { Pool } = require('pg')
 const pool = new Pool({
@@ -36,6 +37,7 @@ app.use(session({
   secret: 'fajar'
 }))
 app.use(flash());
+app.use(fileUpload());
 
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
