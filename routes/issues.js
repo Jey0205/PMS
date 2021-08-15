@@ -2,7 +2,9 @@ var express = require('express');
 const fileUpload = require('express-fileupload');
 var router = express.Router();
 const helpers = require('../helper/util');
-var path = require('path')
+var path = require('path');
+var moment = require('moment');
+
 
 
 module.exports = function (db) {
@@ -29,11 +31,11 @@ module.exports = function (db) {
     }
     let querys = `select * from issues where projectid = ${projectid} order by issueid limit ${limitTab} offset ${offset}`
 
-    let queryCount = `select count(*) as total from issues where projectid = ${projectid}`
+    let queryCount = `select count (*) as total from issues where projectid = ${projectid}`
 
     if (params.length > 0) {
-      querys = `select * from issues where projectid = ${projectid} and`;
-      queryCount = `select count(*) as total from issues where projectid = ${projectid} and`;
+      querys = `select * from issues where projectid = ${projectid} and `;
+      queryCount = `select count (*) as total from issues where projectid = ${projectid} and `;
 
       querys += `${params.join(" and ")} order by issueid limit 3 offset ${offset}`
 
@@ -63,6 +65,8 @@ module.exports = function (db) {
               page,
               url,
               session: req.session.user,
+              info: req.flash('info'),
+              success: req.flash('success') 
             });
           });
       });
@@ -90,7 +94,7 @@ module.exports = function (db) {
         if (err) {
           throw err
         }
-        res.render('../views/sidebar/issues/addissues', { projectid, nama: names.rows, project: projects.rows, info: req.flash('info') })
+        res.render('../views/sidebar/issues/addissues', { projectid, nama: names.rows, project: projects.rows, info: req.flash('info'),session: req.session.user })
       })
 
     })
@@ -184,33 +188,301 @@ module.exports = function (db) {
   /* Edit Issues*/
   router.get('/:projectid/editissues/:issueid', helpers.isLoggedIn, (req, res, next) => {
     const projectid = req.params.projectid
-    db.query('select firstname,lastname,userid from users', (err, names) => {
+    const issueid = req.params.issueid
+    const baseUrl = `http://${req.headers.host}`;
+    db.query(`select * from users where userid in (select assignee from issues where projectid = ${projectid} and issueid = ${issueid} and author = ${req.session.user.userid})`, (err, name) => {
       if (err) {
         throw err
       }
-      db.query(`select tracker, subject,description,status,priority,assignee,startdate,duedate,estimatedtime,done,files from issues`, (err, isu) => {
+      db.query(`select * from users where not userid in (select assignee from issues where projectid = ${projectid} and issueid = ${issueid})`, (err, names) => {
         if (err) {
           throw err
         }
-        res.render('../views/sidebar/issues/editissues', { projectid, nama: names.rows, issue: isu.rows[0] })
+        db.query(`select * from issues where projectid = ${projectid} and issueid = ${issueid}`, (err, isu) => {
+          if (err) {
+            throw err
+          } let nameFiles = [];
+          if (isu.rows[0].files) {
+            let files = isu.rows[0].files;
+            files.forEach((item) => {
+              nameFiles.push(item.name);
+            });
+          }
+          db.query(`select createddate from issues where projectid = ${projectid} and issueid = ${issueid}`, (err, date) => {
+            if (err) {
+              throw err
+            }
+            db.query(`select startdate,duedate from issues where projectid = ${projectid} and issueid = ${issueid}`, (err, sddate) => {
+              if (err) {
+                console.log(req.session.userid)
+                throw err
+              }
+              db.query(`select firstname, lastname from users where userid = ${req.session.user.userid}`, (err, orang) => {
+                res.render('../views/sidebar/issues/editissues', {
+                  projectid,
+                  issueid,
+                  nama: name.rows[0],
+                  namnam: names.rows,
+                  issue: isu.rows[0],
+                  date: date.rows[0],
+                  sdate: sddate.rows[0],
+                  moment: moment,
+                  people: orang.rows[0],
+                  baseUrl,
+                  session: req.session.user
+                })
+              })
+            })
+          })
+        })
       })
     })
   })
 
   router.post('/:projectid/editissues/:issueid', helpers.isLoggedIn, (req, res, next) => {
     const projectid = req.params.projectid
-    db.query(`update issues set tracker = $1 , subject = $2 ,description = $3 ,status = $4 ,priority = $5 ,assignee = $6 ,startdate = $7,duedate = $8,estimatedtime = $9, done = $10 ,files = $11, spenttime = $12, targetversion = $13, author = $14, createddate = $15, updateddate = $16, closeddate = $17 where issueid = ${req.params.issueid}`, [req.body.option, req.body.subject, req.body.description, req.body.optionstat, req.body.prior, req.body.issueid, req.body.startDate, req.body.dueDate, req.body.estimatedTime, req.body.percentage, req.body.files, req.body.spentTime, req.body.targetVer, req.body.author, req.body.createdDate, req.body.updateDate, req.body.closedDate])
-      .then(res.redirect(`/issues/${projectid}`))
-      .catch(err => {
-        throw err
+    const issueid = req.params.issueid
+    const manyFiles = []
+    if (!req.files && !req.body.fileDb) {
+      if (req.body.optionStat == "Closed") {
+        return db.query(`update issues set tracker = $1, subject = $2, description = $3, status = $4, priority = $5, assignee = $6, estimatedtime = $7, done = $8, spenttime = $9, targetversion = $10, author = $11, updateddate = now(), closeddate = $12, files = null where issueid = ${issueid} returning *`,
+          [req.body.options,
+          req.body.subject,
+          req.body.description,
+          req.body.optionStat,
+          req.body.optionPrior,
+          req.body.issueid,
+          req.body.estimatedTime,
+          req.body.done,
+          req.body.spentTime,
+          req.body.targetVer,
+          req.session.user.userid,
+          req.body.closedDate],
+          (err, edit) => {
+            if (err) {
+              throw err
+            }
+            let log = edit.rows[0]
+            db.query(`insert into activity(time, title, description, author, issueid) values(now(), $1, $2, $3, $4)`, [log.subject, log.description, log.author, issueid])
+            .then(res.redirect(`/issues/${projectid}`))
+            .catch(err =>{
+              throw err
+            })
+          })
+      } else {
+        return db.query(`update issues set tracker = $1, subject = $2, description = $3, status = $4, priority = $5, assignee = $6, estimatedtime = $7, done = $8, spenttime = $9, targetversion = $10, author = $11, updateddate = now(), closeddate = $12, files = null where issueid = ${issueid} returning *`,
+          [req.body.options,
+          req.body.subject,
+          req.body.description,
+          req.body.optionStat,
+          req.body.optionPrior,
+          req.body.issueid,
+          req.body.estimatedTime,
+          req.body.done,
+          req.body.spentTime,
+          req.body.targetVer,
+          req.session.user.userid,
+          req.body.closedDate],
+          (err, edit) => {
+            if (err) {
+              throw err
+            }
+            let log = edit.rows[0]
+            db.query(`insert into activity(time, title, description, author, issueid) values(now(), $1, $2, $3, $4)`, [log.subject, log.description, log.author, issueid])
+            .then(res.redirect(`/issues/${projectid}`))
+            .catch(err =>{
+              throw err
+            })
+          })
+      }
+
+    }
+    else if (!req.body.fileDb && req.files.file.length > 1) {
+      req.files.file.forEach(item => {
+        let fileName = `${Date.now()}|${item.name}`;
+        let pathFile = path.join(__dirname, "..", "public", "images", "upload", fileName)
+        manyFiles.push({ name: fileName, type: item.mimetype });
+        item.mv(pathFile, (err) => {
+          if (err) {
+            throw err;
+          }
+        })
+        console.log(manyFiles)
       })
+    }
+    else if (!req.body.fileDb && req.files.file) {
+      let fileName = `${Date.now()}|${req.files.file.name}`;
+      let uploadPath = path.join(__dirname, "..", "public", "images", "upload", fileName);
+      manyFiles.push({ name: fileName, type: req.files.file.mimetype });
+      req.files.file.mv(uploadPath, (err) => {
+        if (err) {
+          throw err;
+        }
+      });
+    } else if (typeof req.body.fileDb == "object" && !req.files) {
+      for (let i = 0; i < req.body.fileDb.length; i++) {
+        manyFiles.push({
+          name: req.body.fileDb[i],
+          type: req.body.typeDb[i],
+        });
+      }
+    } else if (typeof req.body.fileDb == "string" && !req.files) {
+      manyFiles.push({ name: req.body.fileDb, type: req.body.typeDb });
+    } else if (
+      typeof req.body.fileDb == "object" &&
+      req.files.file.length > 1
+    ) {
+      for (let i = 0; i < req.body.fileDb.length; i++) {
+        manyFiles.push({
+          name: req.body.fileDb[i],
+          type: req.body.typeDb[i],
+        });
+      }
+      req.files.file.forEach((item) => {
+        let fileName = `${Date.now()}|${item.name}`;
+        let uploadPath = path.join(
+          __dirname,
+          "..",
+          "public",
+          "images",
+          "upload",
+          fileName
+        );
+        manyFiles.push({ name: fileName, type: item.mimetype });
+        item.mv(uploadPath, (err) => {
+          if (err) {
+            throw err;
+          }
+        });
+      });
+    } else if (req.body.fileDb && req.files.file.length > 1) {
+      manyFiles.push({ name: req.body.fileDb, type: req.body.typeDb });
+      req.files.file.forEach((item) => {
+        let fileName = `${Date.now()}|${item.name}`;
+        let uploadPath = path.join(
+          __dirname,
+          "..",
+          "public",
+          "images",
+          "upload",
+          fileName
+        );
+        manyFiles.push({ name: fileName, type: item.mimetype });
+        item.mv(uploadPath, (err) => {
+          if (err) {
+            throw err;
+          }
+        });
+      });
+    } else if (typeof req.body.fileDb == "object" && req.files.file) {
+      for (let i = 0; i < req.body.fileDb.length; i++) {
+        manyFiles.push({
+          name: req.body.fileDb[i],
+          type: req.body.typeDb[i],
+        });
+      }
+
+      let fileName = `${Date.now()}|${req.files.file.name}`;
+      let uploadPath = path.join(
+        __dirname,
+        "..",
+        "public",
+        "images",
+        "upload",
+        fileName
+      );
+      manyFiles.push({ name: fileName, type: req.files.file.mimetype });
+      req.files.file.mv(uploadPath, (err) => {
+        if (err) {
+          throw err;
+        }
+      });
+    } else if (req.body.fileDb && req.files.file) {
+      manyFiles.push({ name: req.body.fileDb, type: req.body.typeDb });
+      let fileName = `${Date.now()}|${req.files.file.name}`;
+      let uploadPath = path.join(
+        __dirname,
+        "..",
+        "public",
+        "images",
+        "upload",
+        fileName
+      );
+      manyFiles.push({ name: fileName, type: req.files.file.mimetype });
+      req.files.file.mv(uploadPath, (err) => {
+        if (err) {
+          throw err;
+        }
+      });
+    }
+    if (req.body.fileDb || req.files.file) {
+      if (req.body.optionStat == 'Closed') {
+        return db.query(`update issues set tracker = $1, subject = $2, description = $3, status = $4, priority = $5,assignee = $6, estimatedtime = $7, done = $8, spenttime = $9, targetversion = $10, author = $11, updateddate = now(), closeddate = $12, files = $13 where issueid = ${issueid} returning *`,
+          [req.body.options,
+          req.body.subject,
+          req.body.description,
+          req.body.optionStat,
+          req.body.optionPrior,
+          req.body.issueid,
+          req.body.estimatedTime,
+          req.body.done,
+          req.body.spentTime,
+          req.body.targetVer,
+          req.session.user.userid,
+          req.body.closedDate,
+            manyFiles],
+          (err, edit) => {
+            if (err) {
+              throw err
+            }
+            let log = edit.rows[0]
+            db.query(`insert into activity(time, title, description, author, issueid) values(now(), $1, $2, $3, $4)`, [log.subject, log.description, log.author, issueid])
+            .then(res.redirect(`/issues/${projectid}`))
+            .catch(err =>{
+              throw err
+            })
+          })
+      } else {
+        return db.query(`update issues set tracker = $1, subject = $2, description = $3, status = $4, priority = $5,assignee = $6, estimatedtime = $7, done = $8, spenttime = $9, targetversion = $10, author = $11, updateddate = now(), closeddate = $12, files = $13 where issueid = ${issueid} returning *`,
+          [req.body.options,
+          req.body.subject,
+          req.body.description,
+          req.body.optionStat,
+          req.body.optionPrior,
+          req.body.issueid,
+          req.body.estimatedTime,
+          req.body.done,
+          req.body.spentTime,
+          req.body.targetVer,
+          req.session.user.userid,
+          req.body.closedDate,
+            manyFiles],
+          (err, edit) => {
+            if (err) {
+              throw err
+            }
+            let log = edit.rows[0]
+            db.query(`insert into activity(time, title, description, author, issueid) values(now(), $1, $2, $3, $4)`, [log.subject, log.description, log.author, issueid])
+              .then(res.redirect(`/issues/${projectid}`))
+              .catch(err =>{
+                throw err
+              })
+              
+          })
+      }
+    }
   })
 
   /* Delete Issues */
-  router.get('/:projectid/deleteissues/:issueid', helpers.isLoggedIn, (req, res, next) => {
+  router.get('/:projectid/deleteissues/:issueid', helpers.isLoggedIn,helpers.isAdmin, (req, res, next) => {
     const projectid = req.params.projectid
-    db.query('delete from issues where issueid = $1', [req.params.issueid])
-      .then(res.redirect(res.redirect(`/issues/${projectid}`)))
+    db.query('delete from issues where issueid = $1', [req.params.issueid], (err)=>{
+      if(err){
+        throw err
+      }
+      req.flash('success','Delete Complete')
+    })
+      
   })
 
 

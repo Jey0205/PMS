@@ -1,9 +1,10 @@
 
 var express = require('express');
 var router = express.Router();
-const helpers = require('../helper/util')
+const helpers = require('../helper/util');
 const bcrypt = require('bcrypt');
 const salt = 5;
+var moment = require('moment');
 
 
 
@@ -44,7 +45,6 @@ module.exports = function (db) {
 
             queryCount += ` where ${params.join(" and ")} group by projects.projectid, projects.name order by projects.projectid`
         }
-        console.log(queryCount)
 
         db.query(queryCount, (err, result) => {
             let total = result.rows.length;
@@ -62,7 +62,7 @@ module.exports = function (db) {
                             if (err) {
                                 throw err;
                             }
-                            console.log(option.rows[0], result.rows, data.rows, names.rows)
+                            console.log(req.session.user)
                             res.render("../views/index", {
                                 data: data.rows,
                                 option: option.rows[0].option,
@@ -73,7 +73,9 @@ module.exports = function (db) {
                                 pages,
                                 page,
                                 url,
-                                session: req.session.user
+                                session: req.session.user,
+                                info: req.flash('info'), 
+                                success: req.flash('success')
                             });
                         });
                     }
@@ -93,8 +95,98 @@ module.exports = function (db) {
     /* overview */
     router.get('/overview/:projectid', helpers.isLoggedIn, (req, res, next) => {
         const projectid = req.params.projectid
-        res.render('../views/sidebar/overview',{projectid})
+        db.query(`select projectid, tracker,subject,status from issues left join projects using (projectid) where projectid = ${projectid}`, (err, issue) => {
+            if (err) {
+                throw err
+            }
+            db.query(`select count(*) as total from issues where tracker = 'Bug' and projectid = $1`, [projectid], (err, totalBug) => {
+                if (err) {
+                    throw err
+                }
+                db.query(`select count(*) as total from issues where tracker = 'Feature' and projectid = $1`, [projectid], (err, totalFeature) => {
+                    if (err) {
+                        throw err
+                    }
+                    db.query(`select count(*) as total from issues where tracker = 'Support' and projectid = $1`, [projectid], (err, totalSupport) => {
+                        if (err) {
+                            throw err
+                        }
+                        db.query(`select * from users where userid in (select userid from members where projectid = ${projectid})`, (err, names) => {
+                            if (err) {
+                                throw err
+                            }
+                            db.query(`select count(*) as total from issues where tracker = 'Bug' and projectid = $1 and not status = 'Closed'`, [projectid], (err, openBug) => {
+                                if (err) {
+                                    throw err
+                                } db.query(`select count(*) as total from issues where tracker = 'Feature' and projectid = $1 and not status = 'Closed'`, [projectid], (err, openFeature) => {
+                                    if (err) {
+                                        throw err
+                                    } db.query(`select count(*) as total from issues where tracker = 'Support' and projectid = $1 and not status = 'Closed'`, [projectid], (err, openSupport) => {
+                                        if (err) {
+                                            throw err
+                                        } 
+                                        res.render('../views/sidebar/overview', {
+                                            projectid,
+                                            isu: issue.rows,
+                                            nama: names.rows,
+                                            total: totalBug.rows[0],
+                                            total2: totalFeature.rows[0],
+                                            total3: totalSupport.rows[0],
+                                            open: openBug.rows[0],
+                                            open2: openFeature.rows[0],
+                                            open3: openSupport.rows[0],
+                                            session: req.session.user,
+                                            success: req.flash('success')
+                                        })
+                                    })
+
+                                })
+                            })
+                        })
+                    })
+                })
+            })
+        })
     })
+
+
+    /* Activity */
+    router.get('/activity/:projectid', helpers.isLoggedIn, (req, res, next) => {
+        const projectid = req.params.projectid
+        db.query(`select issues.projectid, activity.time, activity.title, activity.description, activity.author, users.firstname, issues.issueid  from activity left join users on activity.author = users.userid left join issues on activity.issueid = issues.issueid where projectid = $1 and time > current_date - interval '7 days' order by activity.time desc`, [projectid], (err, data) => {
+            if (err) {
+                throw err
+            }
+            let result = []
+            data.rows.forEach((item) => {
+                if (
+                    result[moment(item.time).format("dddd")] &&
+                    result[moment(item.time).format("dddd")].data
+                ) {
+                    result[moment(item.time).format("dddd")].data.push(item);
+                } else {
+                    result[moment(item.time).format("dddd")] = {
+                        date: moment(item.time).format("YYYY-MM-DD"),
+                        data: [item],
+                    };
+                }
+            });
+
+            let now = new Date();
+            let from = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000));
+            res.render('../views/sidebar/activity', { 
+                projectid,
+                data : data.rows,
+                moment : moment,
+                result,
+                now,
+                from,
+                session : req.session.user
+             })
+        })
+        
+    })
+
 
     /* members */
     router.get('/members/:projectid', helpers.isLoggedIn, function (req, res, next) {
@@ -115,20 +207,17 @@ module.exports = function (db) {
         if (position) {
             params.push(`members.role = '${position}'`)
         }
-        let querys = `select members.id, members.userid,  users.firstname as name, members.role as position FROM members INNER JOIN users USING (userid) order by members.id limit 3 offset 0;
+        let querys = `select members.id, members.userid,  users.firstname as name, members.role as position FROM members LEFT JOIN users USING (userid) where projectid = ${projectid} order by members.id limit 3 offset 0;
         `
-        let queryCount = `select members.id,  users.firstname as name, members.role as position FROM members INNER JOIN users USING (userid)  order by members.id`
+        let queryCount = `select members.id,  users.firstname as name, members.role as position FROM members LEFT JOIN users USING (userid) where projectid = ${projectid}  order by members.id`
 
-        if (page) {
-            querys = `select members.id, members.userid, users.firstname as name, members.role as position FROM members INNER JOIN users USING (userid)  order by members.id limit 3 offset ${offset}`
-        }
         if (params.length > 0) {
-            querys = `select members.id, members.userid, users.firstname as name, members.role as position FROM members INNER JOIN users USING (userid)`;
-            queryCount = `select members.id, users.firstname as name, members.role as position FROM members INNER JOIN users USING (userid)`;
+            querys = `select members.id, members.userid, users.firstname as name, members.role as position FROM members LEFT JOIN users USING (userid) where projectid = ${projectid} and `;
+            queryCount = `select members.id, users.firstname as name, members.role as position FROM members LEFT JOIN users USING (userid) where projectid = ${projectid} and `;
 
-            querys += ` where ${params.join(" and ")} limit 3 offset ${offset}`
+            querys += ` ${params.join(" and ")} limit ${limitTab} offset ${offset}`
 
-            queryCount += ` where ${params}`
+            queryCount += `${params}`
         }
 
         db.query(queryCount, (err, result) => {
@@ -160,7 +249,7 @@ module.exports = function (db) {
                                         optionmem: option.rows[0].optionmem,
                                         names: names.rows,
                                         user: result.rows,
-                                        pros : project.rows,
+                                        pros: project.rows,
                                         projectid,
                                         addmem,
                                         position,
@@ -168,7 +257,8 @@ module.exports = function (db) {
                                         pages,
                                         page,
                                         url,
-                                        session: req.session.user
+                                        session: req.session.user,
+                                        info: req.flash('info') 
                                     })
 
 
@@ -181,23 +271,27 @@ module.exports = function (db) {
         });
     });
 
-    router.get('/members/:projectid/addmember', helpers.isLoggedIn ,(req,res,next) =>{
+    /*Add Member */
+    router.get('/members/:projectid/addmember', helpers.isLoggedIn, (req, res, next) => {
         const projectid = req.params.projectid
-        db.query('select * from users',(err,names)=>{
+        db.query(`select * from users where not userid in (select userid from members where projectid = ${projectid})`, (err, names) => {
             if (err) {
                 throw err
             }
-            db.query('select * from projects', (err,pros) =>{
+            db.query('select * from projects', (err, pros) => {
                 if (err) {
                     throw err
                 }
-                res.render('../views/sidebar/member/addmember',{user : names.rows , pros : pros.rows, projectid})
+                res.render('../views/sidebar/member/addmember', { user: names.rows,
+                     pros: pros.rows,
+                      projectid ,
+                      session: req.session.user})
             })
         })
     })
-    router.post('/members/:projectid/addember', helpers.isLoggedIn, (req, res, next) => {
+    router.post('/members/:projectid/addmember', helpers.isLoggedIn, (req, res, next) => {
         const projectid = req.params.projectid
-        db.query('insert into members(userid , role, projectid) values($1,$2,$3)', [req.body.userid, req.body.role, projectid])
+        db.query('insert into members(userid, role, projectid) values($1,$2,$3)', [req.body.userid, req.body.role, projectid])
             .then(res.redirect(`/members/${projectid}`))
     })
 
@@ -206,59 +300,51 @@ module.exports = function (db) {
         const projectid = req.params.projectid
         db.query('update users set optionmem = $1 where userid = $2', [req.body, req.session.user.userid])
             .then(res.redirect(`/members/${projectid}`))
-            .catch(e => {throw e})
+            .catch(e => { throw e })
     })
 
     /* Delete and Edit Members */
-    router.get('/members/:projectid/delete/:userid', helpers.isLoggedIn, (req, res, next) => {
+    router.get('/members/:projectid/delete/:userid', helpers.isLoggedIn, helpers.isAdmin, (req, res, next) => {
         const projectid = req.params.projectid
         db.query('delete from members where projectid  = $1 and  userid = $2', [projectid, req.params.userid])
-                .then(res.redirect(`/members/${projectid}`))
-            })
-    
+            .then(res.redirect(`/members/${projectid}`))
+    })
+
 
 
     router.get('/members/:projectid/edit/:userid', helpers.isLoggedIn, (req, res, next) => {
         const projectid = req.params.projectid
-        db.query('select * from users', (err,names) =>{
+        db.query('select * from users', (err, names) => {
             if (err) {
                 throw err
             }
-            db.query('select * from projects', (err,pros) =>{
+            db.query('select * from projects', (err, pros) => {
                 if (err) {
                     throw err
                 }
-                res.render(`../views/sidebar/member/editmember`, {nama : names.rows, project : pros.rows, projectid})
+                res.render(`../views/sidebar/member/editmember`, { nama: names.rows, project: pros.rows, projectid,session: req.session.user })
             })
         })
-            
+
     })
 
-    router.post('/members/:projectid/edit/:userid', helpers.isLoggedIn, (req,res,next) => {
+    router.post('/members/:projectid/edit/:userid', helpers.isLoggedIn, (req, res, next) => {
         const projectid = req.params.projectid
-        db.query(`update members set userid = $1, role = $2, projectid = $3 where userid = $4 `,[req.body.namelist,req.body.poscheck,req.body.proslist, req.params.userid])
-        .then(res.redirect(`/members/${projectid}`))
-        .catch(err => { throw err})
+        db.query(`update members set userid = $1, role = $2, projectid = $3 where userid = $4 `, [req.body.namelist, req.body.poscheck, req.body.proslist, req.params.userid])
+            .then(res.redirect(`/members/${projectid}`))
+            .catch(err => { throw err })
     })
 
 
     /* GET add user*/
-    router.get('/register', helpers.isLoggedIn, (req, res, next) => {
-        res.render('../views/login/register', { title: 'Express' });
+    router.get('/register', helpers.isLoggedIn,helpers.isAdmin, (req, res, next) => {
+        console.log(req.body.typeFt)
+        res.render('../views/login/register', { session: req.session.user });
     });
     router.post('/register', helpers.isLoggedIn, (req, res, next) => {
-        bcrypt.hash(req.body.password, salt, function (err, hash) {
-            if (req.body.typeFt == true) {
-                console.log(req.body.typeFt)
-                db.query(`insert into users(email,password,firstname,lastname,position) values ('${req.body.email}','${hash}','${req.body.firstname}','${req.body.lastname}','${req.body.position}')`, [])
+        bcrypt.hash(req.body.password, salt,(err, hash) => {
+                db.query(`insert into users(email,password,firstname,lastname,position,option,optionmem,optionisu,role) values ('${req.body.email}','${hash}','${req.body.firstname}','${req.body.lastname}','${req.body.position}','${req.body.option}','${req.body.optionmem}','${req.body.optionisu}','${req.body.role}')`, [])
                     .then(res.redirect('/'))
-                    .catch(e => console.error(e));
-            } else {
-                db.query(`insert into users(email,password,firstname,lastname,isfulltime, isparttime,position) values ('${req.body.email}','${hash}','${req.body.firstname}','${req.body.lastname}','${req.body.position}')`, [])
-                    .then(res.redirect('/'))
-                    .catch(e => console.error(e));
-
-            }
         })
     });
 

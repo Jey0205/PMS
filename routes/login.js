@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const bcrypt = require('bcrypt');
+const session = require('express-session');
 const salt = 5;
 
 
@@ -25,6 +26,7 @@ module.exports = function (db) {
       bcrypt.compare(req.body.password, data.rows[0].password, function (err, result) {
         if (result) {
           req.session.user = data.rows[0]
+          req.flash('success', `Welcome ${req.session.user.firstname} ${req.session.user.lastname}`)
           return res.redirect('/')
         } else {
           req.flash('info', 'You forgot your password? Such a Dumbass you are!!')

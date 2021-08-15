@@ -1,5 +1,10 @@
 <%- include('./partials/header') %>
 <div class="container-fluid">
+    <div class="row mb-2">
+        <h3>
+            Welcome, <%= session.firstname %> <%= session.lastname %> 
+        </h3>
+    </div>
     <div class="row mb-3 border-bottom">
         <h2 style="font-family: monospace;">Project</h2>
     </div>
@@ -54,7 +59,7 @@
                 <input class="btn btn-primary" type="submit" value="Search">
             </div>
             <div class="col-sm-2">
-                <a href="#" class="btn btn-danger">Reset</a>
+                <a href="/" class="btn btn-danger">Reset</a>
             </div>
         </div>
     </form>
@@ -112,12 +117,12 @@
                             <% } %>
                                 <th>Action</th>
             </tr>
-            <% data.forEach((item)=>{ %>
+            <% data.forEach((item,index)=>{ %>
                 <tr>
                     <% if(option['idOpt']) { %>
                         <td>
-                            <a href="/overview/<%= item.projectid %>">
-                                <%= item.projectid %>
+                            <a class="btn btn-light" href="/overview/<%= item.projectid %>">
+                                <%= index + 1  %>
                             </a>
                         </td>
                         <% } if(option['nameOpt']) { %>
@@ -133,7 +138,7 @@
                                         <a href="/project/EditProject/<%= item.projectid %>"
                                             class="btn btn-success">Edit</a>
                                         <a href="/project/DeleteProject/<%= item.projectid %>" class="btn btn-danger"
-                                            onclick="delClick">Delete</a>
+                                            >Delete</a>
                                     </td>
 
                 </tr>
@@ -168,14 +173,26 @@
             <a href="/project/AddProject" class="btn btn-primary">Add</a>
         </div>
     </div>
+
+    <% if(success.length > 0) { %>
+        <div class="alert alert-success text-center" id="fade-success" role="alert">
+         <%= success  %>
+        </div>
+        <% } %>
+
+    <% if(info.length > 0) { %>
+        <div class="alert alert-danger" id="fade-alert" role="alert">
+         <%= info %>
+        </div>
+        <% } %>
 </div>
   
 
     <script>
-        function delClick() {
-            confirm('Are you sure?')
-            alert('really?')
-        }
+
+        $('#fade-success').fadeOut(3000)
+        $('#fade-alert').fadeOut(3000)
+
 
         function proid() {
             const check = document.getElementById('checkProjectid')

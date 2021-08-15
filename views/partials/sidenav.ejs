@@ -1,15 +1,27 @@
-
 <body>
     <div class="d-flex" id="wrapper">
         <!-- Sidebar-->
-        <div class="border-end bg-white" id="sidebar-wrapper">
-            <div class="sidebar-heading border-bottom bg-light"></div>
-            <div class="list-group list-group-flush">
-                <a class="list-group-item list-group-item-action list-group-item-light p-5" href="/overview/<%= projectid %>">Overview</a>
-                <a class="list-group-item list-group-item-action list-group-item-light p-5" href="/activity/<%= projectid %>">Activity</a>
-                <a class="list-group-item list-group-item-action list-group-item-light p-5" href="/members/<%= projectid %>">Members</a>
-                <a class="list-group-item list-group-item-action list-group-item-light p-5 border-bottom" href="/issues/<%= projectid %>">Issues</a>
+        
+            
+            <div class="sidebar-wrapper">
+                <ul class="sidebar-nav">
+                    <li>
+                    <a class="list-group-item list-group-item-action list-group-item-dark p-5"
+                        href="/overview/<%= projectid %>">Overview</a>
+                    </li>    
+                    <li>
+                    <a class="list-group-item list-group-item-action list-group-item-dark p-5"
+                        href="/activity/<%= projectid %>">Activity</a>
+                    </li>
+                    <li>
+                    <a class="list-group-item list-group-item-action list-group-item-dark p-5"
+                        href="/members/<%= projectid %>">Members</a>
+                    </li>
+                    <li>
+                    <a class="list-group-item list-group-item-action list-group-item-dark p-5 border-bottom"
+                        href="/issues/<%= projectid %>">Issues</a>
+                    </li>
+                </ul>
             </div>
-        </div>
+        
 </body>
-</html>

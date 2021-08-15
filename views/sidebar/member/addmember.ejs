@@ -14,7 +14,7 @@
                                 <label class="form-check-label" id="projectNama" name="projectNama">Nama
                             </div>
                             <div class="col-sm-8">
-                                <select class="form-select ;" aria-label="Default select example" id="role" name="role">
+                                <select class="form-select" aria-label="Default select example" id="userid" name="userid">
                                     <option selected hidden>Choose The Position</option>
                                     <% user.forEach((role)=>{ %>
                                         <option value="<%= role.userid %>">
@@ -28,40 +28,28 @@
                             <div class="row my-3">
                                 <div class="col-sm-1"></div>
                                 <div class="col-sm-1">
-                                    <label class="form-check-label" id="projectNama" name="projectNama">Daftar Project
+                                    <label class="form-check-label" id="projectNama" name="projectNama">Job Desk
                                 </div>
                                 <div class="col-sm-8">
-                                    <select class="form-select ;" aria-label="Default select example" id="projectid"
-                                        name="projectid">
-                                        <option selected hidden>Choose The Projects</option>
-                                        <% pros.forEach((project)=>{ %>
-                                            <option value="<%= project.projectid %>">
-                                                <%= project.name %>
+                                    <select class="form-select" aria-label="Default select example" id="role" name="role">
+                                        <option selected hidden>Choose The Position</option>
+                                            <option value="Manager">
+                                                Manager
                                             </option>
-                                            <% }) %>
+                                            <option value="Software Developer">
+                                                Software Developer
+                                            </option>
+                                            <option value="Quality Assurance">
+                                                Quality Assurance
+                                            </option>
                                     </select>
                                 </div>
                             </div>
 
-                            <% user.forEach((item)=> { %>
-                                <div class="row mb-3">
-                                    <div class="col-sm-1"></div>
-                                    <div class="col-sm-8">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="userid" id="userid"
-                                                value="<%= item.position %>">
-                                            <label class="form-check-label" for="idOpt">
-                                                <%= item.position %>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <% }); %>
-
                                     <div class="row mb-3">
                                         <div class="col-sm-1"></div>
                                         <div class="col-sm-1">
-                                            <input class="btn btn-primary" type="submit" value="Save">
+                                            <button  class="btn btn-primary" type="submit">Save</Button>
                                         </div>
                                         <div class="col-sm-2">
                                             <a href="/members/<%= projectid %>" class="btn btn-danger">Cancel</a>

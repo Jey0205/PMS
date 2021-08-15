@@ -5,6 +5,61 @@
                 <h2 style="font-family: monospace;">Overview</h2>
             </div>
             <h3 style="font-family: monospace;">Library System</h3>
+            <div class="h-10 row mb-5 align-items-center">
+                <div class="col-sm-3">
+                </div>
+                <div class="card" style="width: 50rem; height: 20rem;">
+                    <div class="card-body">
+                        <h3 class="card-title text-center border-bottom">Issue Tracking</h3>
+                        <div class="row mb-5">
+                            <h5 class="card-text text-center">This is total issue from this Projects</h5>
+                        </div>
+                        <ul>
+
+                            <p class="card-text">
+                                <li> Bug: <%= total.total%>   Open/ <%= open.total %>
+                                </li>
+                            </p>
+
+
+                            <p class="card-text">
+                                <li> Feature: <%= total2.total %>   Open/ <%= open2.total %>
+                                </li>
+                            </p>
+
+
+                            <p class="card-text">
+                                <li> Support: <%= total3.total %>   Open/ <%= open3.total %> </li>
+                            </p>
+
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+            <div class="h-10 row align-items-center">
+                <div class="col-sm-3">
+                </div>
+                <div class="card" style="width: 50rem; height: 20rem;">
+                    <div class="card-body">
+                        <h3 class="card-title text-center">Members</h3>
+                        <div class="row mb-5 border-bottom">
+                        </div>
+                        <ul>
+                            <% nama.forEach(name =>{ %>
+                            <p class="card-text">
+                                <li> <%= name.firstname %> <%= name.lastname %>
+                                </li>
+                            </p>
+                            <% }) %>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
         </div>
+
+
+
 
         <%- include('../partials/footer') %>

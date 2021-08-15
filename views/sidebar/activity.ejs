@@ -1,0 +1,55 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidenav') %>
+    <div class="container-fluid">
+        <div class="row mb-3 border-bottom">
+            <h2 style="font-family: monospace;">Activity</h2>
+        </div>
+        <h3 style="font-family: monospace;">Your weekly report</h3>
+        <div class="h-10 row mb-5 align-items-center">
+            <div class="col-sm-3">
+            </div>
+            <div class="card" style="width: 50rem; height: 20rem;">
+                <div class="card-body">
+                    <p>Activity</p>
+                    <p><%= `From ${moment(from).format("MM/DD/YYYY")} to ${moment(now).format("MM/DD/YYYY")}` %></p>
+                    <% for(const dayName in result){ %> 
+                      <p><%= dayName == moment(new Date()).format("dddd") ? 'Today' : dayName %> </p>
+                      <ul>
+                        <% result[dayName].data.forEach(item => { %> 
+                      <li><%= moment(item.time).format("HH:mm") %> <%= item.title %> #<%= item.issueid %> (<%= item.description %>): Description, author: <%= item.firstname %> </li>
+                      <% }) %> 
+                    </ul>
+                    <% } %> 
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<%- include('../partials/footer') %>

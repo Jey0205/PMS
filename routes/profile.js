@@ -16,7 +16,7 @@ module.exports = function (db) {
         if (req.body.typeFt == undefined) {
             return db.query(`update users set position = $1, isfulltime = false, isparttime = true where email = $2`, [req.body.options, req.session.user.email], (err, data) => {
                 if (err) throw err
-                req.flash('info', 'Update Successful')
+                req.flash('success', 'Update Successful')
                 res.redirect('/')
 
             })
@@ -24,7 +24,7 @@ module.exports = function (db) {
         } else {
             db.query(`update users set position = $1, isfulltime = true, isparttime = false where email = $2`, [req.body.options, req.session.user.email], (err, data) => {
                 if (err) throw err
-                req.flash('info', 'Update Successful')
+                req.flash('success', 'Update Successful')
                 res.redirect('/')
 
             })
@@ -34,13 +34,13 @@ module.exports = function (db) {
 
     /* Password */
     router.get('/password', helpers.isLoggedIn, (req, res, next) => {
-        res.render('../views/profile/password', { info: req.flash('info') })
+        res.render('../views/profile/password', { info: req.flash('info'),session : req.session.user })
     })
     router.post('/password', helpers.isLoggedIn, (req, res, next) => {
         console.log(req.body.pass1)
         db.query(`select * from users where email = $1`, [req.session.user.email], (err, data) => {
             bcrypt.compare(req.body.pass1, data.rows[0].password, (err, result) => {
-                if (err) {
+                if (req.body.pass1 !== result) {
                     req.flash('info', 'Old password is wrong!')
                     return res.redirect('/profile/password')
                 }
@@ -56,7 +56,7 @@ module.exports = function (db) {
                                     throw err
                                 }
                                 if (data) {
-                                    req.flash('info', 'Password has change')
+                                    req.flash('success', 'Password has change')
                                     return res.redirect('/')
                                 }
                             })
