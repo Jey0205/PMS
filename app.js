@@ -27,7 +27,7 @@ const { Pool } = require('pg')
 //   pool = new Pool(developmentDB)
 // }
 
-new Pool = ({
+const pool = new Pool({
   user: 'hekpfqrstmmspw',
   host: 'ec2-34-194-14-176.compute-1.amazonaws.com',
   database: 'deakdtfl14mmvo',
