@@ -7,34 +7,33 @@ var session = require('express-session')
 var flash = require('connect-flash');
 const fileUpload = require('express-fileupload');
 
-
-
-
-// const developmentDB = {
-//   user: 'postgres',
-//   host: 'localhost',
-//   database: 'pmsDB',
-//   password: '12345',
-//   port: 5432
-// }
-
-// const isDevelopment = true
-const { Pool } = require('pg')
-// let pool = null
-// if (isDevelopment) {
-//   pool = new Pool(productionDB)
-// } else {
-//   pool = new Pool(developmentDB)
-// }
-
-const pool = new Pool({
+const productionDB = {
   user: 'hekpfqrstmmspw',
   host: 'ec2-34-194-14-176.compute-1.amazonaws.com',
   database: 'deakdtfl14mmvo',
   password: '27ac1d537c6dfb126ce7e2f465624d0649e45e8768f773ba9866c73790bfa6f5',
   port: 5432,
-  ssl: true
-})
+  ssl: {rejectUnauthorized: false}
+}
+
+
+const developmentDB = {
+  user: 'postgres',
+  host: 'localhost',
+  database: 'pmsDB',
+  password: '12345',
+  port: 5432
+}
+
+const isDevelopment = true
+const { Pool } = require('pg')
+let pool = null
+if (isDevelopment) {
+  pool = new Pool(productionDB)
+} else {
+  pool = new Pool(developmentDB)
+}
+
 
 var indexRouter = require('./routes/index')(pool);
 var loginRouter = require('./routes/login')(pool);
