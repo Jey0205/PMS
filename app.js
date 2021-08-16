@@ -32,7 +32,8 @@ const pool = new Pool({
   host: 'ec2-34-194-14-176.compute-1.amazonaws.com',
   database: 'deakdtfl14mmvo',
   password: '27ac1d537c6dfb126ce7e2f465624d0649e45e8768f773ba9866c73790bfa6f5',
-  port: 5432
+  port: 5432,
+  ssl: true
 })
 
 var indexRouter = require('./routes/index')(pool);
