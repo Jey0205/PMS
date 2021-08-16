@@ -15,6 +15,7 @@ module.exports = function (db) {
   router.post('/', function (req, res, next) {
     db.query(`select * from users where email = $1`, [req.body.email], (err, data) => {
       if (err) {
+        console.log(err)
         req.flash('info', 'something wrong!')
         return res.redirect('/login')
       }
