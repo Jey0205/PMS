@@ -19,6 +19,7 @@ module.exports = function (db) {
     let subject = req.query.subject
     let tracker = req.query.tracker
     let params = []
+    let basename = 'Issues'
 
     if (issueid) {
       params.push(`issues.issueid = '${issueid}'`)
@@ -66,7 +67,8 @@ module.exports = function (db) {
               url,
               session: req.session.user,
               info: req.flash('info'),
-              success: req.flash('success') 
+              success: req.flash('success'),
+              base: basename
             });
           });
       });
@@ -86,6 +88,7 @@ module.exports = function (db) {
   /* Add Issues */
   router.get('/:projectid/addissues', helpers.isLoggedIn, (req, res, next) => {
     const projectid = req.params.projectid
+    let basename = 'Add Issues'
     db.query('select firstname,lastname,userid from users', (err, names) => {
       if (err) {
         throw err
@@ -94,7 +97,14 @@ module.exports = function (db) {
         if (err) {
           throw err
         }
-        res.render('../views/sidebar/issues/addissues', { projectid, nama: names.rows, project: projects.rows, info: req.flash('info'),session: req.session.user })
+        res.render('../views/sidebar/issues/addissues', {
+          projectid,
+          nama: names.rows,
+          project: projects.rows,
+          info: req.flash('info'),
+          session: req.session.user,
+          base: basename
+        })
       })
 
     })
@@ -190,6 +200,7 @@ module.exports = function (db) {
     const projectid = req.params.projectid
     const issueid = req.params.issueid
     const baseUrl = `http://${req.headers.host}`;
+    let basename = 'Edit Issues'
     db.query(`select * from users where userid in (select assignee from issues where projectid = ${projectid} and issueid = ${issueid} and author = ${req.session.user.userid})`, (err, name) => {
       if (err) {
         throw err
@@ -229,7 +240,8 @@ module.exports = function (db) {
                   moment: moment,
                   people: orang.rows[0],
                   baseUrl,
-                  session: req.session.user
+                  session: req.session.user,
+                  base: basename
                 })
               })
             })
@@ -264,10 +276,10 @@ module.exports = function (db) {
             }
             let log = edit.rows[0]
             db.query(`insert into activity(time, title, description, author, issueid) values(now(), $1, $2, $3, $4)`, [log.subject, log.description, log.author, issueid])
-            .then(res.redirect(`/issues/${projectid}`))
-            .catch(err =>{
-              throw err
-            })
+              .then(res.redirect(`/issues/${projectid}`))
+              .catch(err => {
+                throw err
+              })
           })
       } else {
         return db.query(`update issues set tracker = $1, subject = $2, description = $3, status = $4, priority = $5, assignee = $6, estimatedtime = $7, done = $8, spenttime = $9, targetversion = $10, author = $11, updateddate = now(), closeddate = $12, files = null where issueid = ${issueid} returning *`,
@@ -289,10 +301,10 @@ module.exports = function (db) {
             }
             let log = edit.rows[0]
             db.query(`insert into activity(time, title, description, author, issueid) values(now(), $1, $2, $3, $4)`, [log.subject, log.description, log.author, issueid])
-            .then(res.redirect(`/issues/${projectid}`))
-            .catch(err =>{
-              throw err
-            })
+              .then(res.redirect(`/issues/${projectid}`))
+              .catch(err => {
+                throw err
+              })
           })
       }
 
@@ -437,10 +449,10 @@ module.exports = function (db) {
             }
             let log = edit.rows[0]
             db.query(`insert into activity(time, title, description, author, issueid) values(now(), $1, $2, $3, $4)`, [log.subject, log.description, log.author, issueid])
-            .then(res.redirect(`/issues/${projectid}`))
-            .catch(err =>{
-              throw err
-            })
+              .then(res.redirect(`/issues/${projectid}`))
+              .catch(err => {
+                throw err
+              })
           })
       } else {
         return db.query(`update issues set tracker = $1, subject = $2, description = $3, status = $4, priority = $5,assignee = $6, estimatedtime = $7, done = $8, spenttime = $9, targetversion = $10, author = $11, updateddate = now(), closeddate = $12, files = $13 where issueid = ${issueid} returning *`,
@@ -464,25 +476,25 @@ module.exports = function (db) {
             let log = edit.rows[0]
             db.query(`insert into activity(time, title, description, author, issueid) values(now(), $1, $2, $3, $4)`, [log.subject, log.description, log.author, issueid])
               .then(res.redirect(`/issues/${projectid}`))
-              .catch(err =>{
+              .catch(err => {
                 throw err
               })
-              
+
           })
       }
     }
   })
 
   /* Delete Issues */
-  router.get('/:projectid/deleteissues/:issueid', helpers.isLoggedIn,helpers.isAdmin, (req, res, next) => {
+  router.get('/:projectid/deleteissues/:issueid', helpers.isLoggedIn, helpers.isAdmin, (req, res, next) => {
     const projectid = req.params.projectid
-    db.query('delete from issues where issueid = $1', [req.params.issueid], (err)=>{
-      if(err){
+    db.query('delete from issues where issueid = $1', [req.params.issueid], (err) => {
+      if (err) {
         throw err
       }
-      req.flash('success','Delete Complete')
+      req.flash('success', 'Delete Complete')
     })
-      
+
   })
 
 

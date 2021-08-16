@@ -6,11 +6,12 @@ const helpers = require('../helper/util')
 module.exports = function (db) {
     /*PROJECT*/
     router.get('/AddProject', helpers.isLoggedIn, function (req, res, next) {
+        let basename = 'Add Project'
         db.query('select users.userid, firstname , lastname,position from users', (err, result) => {
             if (err) {
                 throw err
             }
-            res.render('../views/project/add', { names: result.rows, session: req.session.user })
+            res.render('../views/project/add', { names: result.rows, session: req.session.user, base: basename })
         })
     })
     router.post('/AddProject', helpers.isLoggedIn, function (req, res, next) {
@@ -35,9 +36,10 @@ module.exports = function (db) {
 
     })
     router.get('/EditProject/:id', helpers.isLoggedIn, function (req, res, next) {
+        let basename = 'Edit Project'
         db.query('select * from projects where projectid = $1', [req.params.id])
             .then(result => {
-                res.render('../views/project/edit', { data: result.rows[0], session: req.session.user })
+                res.render('../views/project/edit', { data: result.rows[0], session: req.session.user, base: basename })
             })
     })
     router.post('/EditProject/:id', helpers.isLoggedIn, function (req, res, next) {

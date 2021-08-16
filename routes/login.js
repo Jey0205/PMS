@@ -10,7 +10,8 @@ const salt = 5;
 module.exports = function (db) {
   /* GET home page. */
   router.get('/', function (req, res, next) {
-    res.render('../views/login/login', { info: req.flash('info') });
+    let basename = 'Login'
+    res.render('../views/login/login', { info: req.flash('info'), base: basename });
   });
   router.post('/', function (req, res, next) {
     db.query(`select * from users where email = $1`, [req.body.email], (err, data) => {

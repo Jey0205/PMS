@@ -8,8 +8,9 @@ const salt = 5;
 module.exports = function (db) {
     /* Profile */
     router.get('/', helpers.isLoggedIn, (req, res, next) => {
+        let basename = 'Profile'
         db.query(`select * from users where email = $1`, [req.session.user.email])
-        res.render('../views/profile/profile', { email: req.session.user.email, info: req.flash('info'), session: req.session.user })
+        res.render('../views/profile/profile', { email: req.session.user.email, info: req.flash('info'), session: req.session.user,base: basename })
     })
     router.post('/', helpers.isLoggedIn, (req, res, next) => {
         console.log(req.body.options)
@@ -34,7 +35,8 @@ module.exports = function (db) {
 
     /* Password */
     router.get('/password', helpers.isLoggedIn, (req, res, next) => {
-        res.render('../views/profile/password', { info: req.flash('info'),session : req.session.user })
+        let basename = 'Change Password'
+        res.render('../views/profile/password', { info: req.flash('info'),session : req.session.user, base: basename })
     })
     router.post('/password', helpers.isLoggedIn, (req, res, next) => {
         console.log(req.body.pass1)

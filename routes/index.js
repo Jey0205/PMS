@@ -19,6 +19,7 @@ module.exports = function (db) {
         let name = req.query.name
         let members = req.query.members
         let params = []
+        let basename = 'Project'
 
 
         if (name) {
@@ -74,8 +75,9 @@ module.exports = function (db) {
                                 page,
                                 url,
                                 session: req.session.user,
-                                info: req.flash('info'), 
-                                success: req.flash('success')
+                                info: req.flash('info'),
+                                success: req.flash('success'),
+                                base: basename
                             });
                         });
                     }
@@ -95,6 +97,7 @@ module.exports = function (db) {
     /* overview */
     router.get('/overview/:projectid', helpers.isLoggedIn, (req, res, next) => {
         const projectid = req.params.projectid
+        let basename = 'Overview'
         db.query(`select projectid, tracker,subject,status from issues left join projects using (projectid) where projectid = ${projectid}`, (err, issue) => {
             if (err) {
                 throw err
@@ -124,7 +127,7 @@ module.exports = function (db) {
                                     } db.query(`select count(*) as total from issues where tracker = 'Support' and projectid = $1 and not status = 'Closed'`, [projectid], (err, openSupport) => {
                                         if (err) {
                                             throw err
-                                        } 
+                                        }
                                         res.render('../views/sidebar/overview', {
                                             projectid,
                                             isu: issue.rows,
@@ -136,7 +139,8 @@ module.exports = function (db) {
                                             open2: openFeature.rows[0],
                                             open3: openSupport.rows[0],
                                             session: req.session.user,
-                                            success: req.flash('success')
+                                            success: req.flash('success'),
+                                            base: basename
                                         })
                                     })
 
@@ -153,6 +157,7 @@ module.exports = function (db) {
     /* Activity */
     router.get('/activity/:projectid', helpers.isLoggedIn, (req, res, next) => {
         const projectid = req.params.projectid
+        let basename = 'Activity'
         db.query(`select issues.projectid, activity.time, activity.title, activity.description, activity.author, users.firstname, issues.issueid  from activity left join users on activity.author = users.userid left join issues on activity.issueid = issues.issueid where projectid = $1 and time > current_date - interval '7 days' order by activity.time desc`, [projectid], (err, data) => {
             if (err) {
                 throw err
@@ -174,23 +179,25 @@ module.exports = function (db) {
 
             let now = new Date();
             let from = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000));
-            res.render('../views/sidebar/activity', { 
+            res.render('../views/sidebar/activity', {
                 projectid,
-                data : data.rows,
-                moment : moment,
+                data: data.rows,
+                moment: moment,
                 result,
                 now,
                 from,
-                session : req.session.user
-             })
+                session: req.session.user,
+                base: basename
+            })
         })
-        
+
     })
 
 
     /* members */
     router.get('/members/:projectid', helpers.isLoggedIn, function (req, res, next) {
         const projectid = req.params.projectid
+        let basename = 'Members'
         const url = req.url == `/members/${projectid}` ? `/members/${projectid}?page=1` : `${req.url}`
         const page = parseInt(req.query.page) || 1;
         const limitTab = 3
@@ -258,7 +265,8 @@ module.exports = function (db) {
                                         page,
                                         url,
                                         session: req.session.user,
-                                        info: req.flash('info') 
+                                        info: req.flash('info'),
+                                        base: basename
                                     })
 
 
@@ -274,6 +282,7 @@ module.exports = function (db) {
     /*Add Member */
     router.get('/members/:projectid/addmember', helpers.isLoggedIn, (req, res, next) => {
         const projectid = req.params.projectid
+        let basename = 'Add Members'
         db.query(`select * from users where not userid in (select userid from members where projectid = ${projectid})`, (err, names) => {
             if (err) {
                 throw err
@@ -282,10 +291,13 @@ module.exports = function (db) {
                 if (err) {
                     throw err
                 }
-                res.render('../views/sidebar/member/addmember', { user: names.rows,
-                     pros: pros.rows,
-                      projectid ,
-                      session: req.session.user})
+                res.render('../views/sidebar/member/addmember', {
+                    user: names.rows,
+                    pros: pros.rows,
+                    projectid,
+                    session: req.session.user,
+                    base: basename
+                })
             })
         })
     })
@@ -314,6 +326,7 @@ module.exports = function (db) {
 
     router.get('/members/:projectid/edit/:userid', helpers.isLoggedIn, (req, res, next) => {
         const projectid = req.params.projectid
+        let basename = 'Edit Members'
         db.query('select * from users', (err, names) => {
             if (err) {
                 throw err
@@ -322,7 +335,13 @@ module.exports = function (db) {
                 if (err) {
                     throw err
                 }
-                res.render(`../views/sidebar/member/editmember`, { nama: names.rows, project: pros.rows, projectid,session: req.session.user })
+                res.render(`../views/sidebar/member/editmember`, {
+                    nama: names.rows,
+                    project: pros.rows,
+                    projectid,
+                    session: req.session.user,
+                    base: basename
+                })
             })
         })
 
@@ -337,14 +356,14 @@ module.exports = function (db) {
 
 
     /* GET add user*/
-    router.get('/register', helpers.isLoggedIn,helpers.isAdmin, (req, res, next) => {
-        console.log(req.body.typeFt)
-        res.render('../views/login/register', { session: req.session.user });
+    router.get('/register', helpers.isLoggedIn, helpers.isAdmin, (req, res, next) => {
+        let basename = 'Add User'
+        res.render('../views/login/register', { session: req.session.user, base: basename });
     });
     router.post('/register', helpers.isLoggedIn, (req, res, next) => {
-        bcrypt.hash(req.body.password, salt,(err, hash) => {
-                db.query(`insert into users(email,password,firstname,lastname,position,option,optionmem,optionisu,role) values ('${req.body.email}','${hash}','${req.body.firstname}','${req.body.lastname}','${req.body.position}','${req.body.option}','${req.body.optionmem}','${req.body.optionisu}','${req.body.role}')`, [])
-                    .then(res.redirect('/'))
+        bcrypt.hash(req.body.password, salt, (err, hash) => {
+            db.query(`insert into users(email,password,firstname,lastname,position,option,optionmem,optionisu,role) values ('${req.body.email}','${hash}','${req.body.firstname}','${req.body.lastname}','${req.body.position}','${req.body.option}','${req.body.optionmem}','${req.body.optionisu}','${req.body.role}')`, [])
+                .then(res.redirect('/'))
         })
     });
 
