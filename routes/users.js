@@ -8,7 +8,7 @@ const salt = 5;
 module.exports = function (db) {
 
     router.get('/', helpers.isAdmin, helpers.isLoggedIn, (req, res, next) => {
-        const url = req.url == "/users" ? "/users?page=1" : req.url;
+        const url = req.url == "/" ? "/users?page=1" : `/users${req.url}`;
         const page = parseInt(req.query.page) || 1;
         const limitTab = 3
         let offset = (page - 1) * limitTab;
