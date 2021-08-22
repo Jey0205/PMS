@@ -118,8 +118,8 @@
                                             <td>
                                                 <a href="/members/<%= projectid %>/edit/<%= item.userid %>"
                                                     class="btn btn-success">Edit</a>
-                                                <a href="/members/<%= projectid %>/delete/<%= item.userid %>" class="btn btn-danger"
-                                                    onclick="delClick">Delete</a>
+                                                <a href="/members/<%= projectid %>/delete/<%= item.userid %>" <%= session.role !== 'admin' ? 'hidden' : ''%> class="btn btn-danger"
+                                                    onclick="del()" id="delete-button">Delete</a>
                                             </td>
 
                         </tr>
@@ -164,10 +164,13 @@
 
         </div>
         <script>
-            function delClick() {
-                confirm('Are you sure?')
-                alert('really?')
-            }
+             function del(){
+        $("#delete-button").on('click',confirm('Are You Sure?'), function(){
+           if(false){
+               $('#delete-button',href="#")
+           } 
+        })
+    }
 
 
             function nameclick() {

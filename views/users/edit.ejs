@@ -1,0 +1,59 @@
+<%- include('../partials/header') %>
+
+<div class="row mb-3 border-bottom">
+    <h2>
+        Edit Users
+    </h2>
+</div>
+<form action="" method="POST">
+    <div class="row mb-3">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-8">
+            <div class="form-text">
+                <label class="form-text-label" for="idOpt">
+                    E-mail
+                </label>
+                <input class="form-control" type="text" name="email" id="email" value="<%= nama.email %>">
+              
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-8">
+            <div class="form-text">
+                <label class="form-text-label" for="idOpt">
+                    Firstname
+                </label>
+                <input class="form-control" type="text" name="firstname" id="firstname" value="<%= nama.firstname %>">
+                
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-8">
+            <div class="form-text">
+                <label class="form-text-label" for="idOpt">
+                    Lastname
+                </label>
+                <input class="form-control" type="text" name="lastname" id="lastname" value="<%= nama.lastname %>">
+               
+            </div>
+        </div>
+    </div>
+    <div class="row my-5">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-1">
+            <button type="submit" class="btn btn-primary btn-lg">Save</button>
+        </div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-1">
+            <a href="/users"class="btn btn-danger btn-lg"> Cancel </a>
+        </div>
+    </div>
+
+</form>
+
+
+<%- include('../partials/footer') %>

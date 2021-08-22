@@ -137,7 +137,7 @@
                                     <td>
                                         <a href="/project/EditProject/<%= item.projectid %>"
                                             class="btn btn-success">Edit</a>
-                                        <a href="/project/DeleteProject/<%= item.projectid %>" class="btn btn-danger"
+                                        <a href="/project/DeleteProject/<%= item.projectid %>" <%= session.role !== 'admin' ? 'hidden' : ''%> id="delete-button" onclick="del()" class="btn btn-danger"
                                             >Delete</a>
                                     </td>
 
@@ -193,6 +193,13 @@
         $('#fade-success').fadeOut(3000)
         $('#fade-alert').fadeOut(3000)
 
+    function del(){
+        $("#delete-button").on('click',confirm('Are You Sure?'), function(){
+           if(false){
+               $('#delete-button',href="#")
+           } 
+        })
+    }
 
         function proid() {
             const check = document.getElementById('checkProjectid')

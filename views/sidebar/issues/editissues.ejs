@@ -15,18 +15,18 @@
                     </div>
                     <div class="col-sm-8">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="options" id="bug" value="Bug">
+                            <input class="form-check-input" type="radio"  name="options" id="bug" <%= issue.tracker == 'Bug' ? ' checked' : '' %> value="Bug">
                             <label class="form-check-label" for="bug">
                                 Bug
                             </label>
                             <div class="col-sm-8">
-                                <input class="form-check-input" type="radio" name="options" id="feature"
+                                <input class="form-check-input" type="radio" <%= issue.tracker == 'Feature' ? ' checked' : '' %> name="options" id="feature"
                                     value="Feature">
                                 <label class="form-check-label" for="feature">
                                     Feature
                                 </label>
                             </div>
-                            <input class="form-check-input" type="radio" name="options" id="support" value="Support">
+                            <input class="form-check-input" type="radio" <%= issue.tracker == 'Support' ? ' checked' : '' %> name="options" id="support" value="Support">
                             <label class="form-check-label" for="support">
                                 Support
                             </label>
@@ -65,36 +65,36 @@
                     </div>
                     <div class="col-sm-8">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="optionStat" id="new" value="New">
+                            <input class="form-check-input" type="radio" <%= issue.status == 'New' ? ' checked' : '' %> name="optionStat" id="new" value="New">
                             <label class="form-check-label" for="new">
                                 New
                             </label>
                             <div class="col-sm-8">
-                                <input class="form-check-input" type="radio" name="optionStat" id="inProgress"
+                                <input class="form-check-input" type="radio" <%= issue.status == 'In Progress' ? ' checked' : '' %> name="optionStat" id="inProgress"
                                     value="In Progress">
                                 <label class="form-check-label" for="inProgress">
                                     In Progress
                                 </label>
                             </div>
-                            <input class="form-check-input" type="radio" name="optionStat" id="resolve" value="Resolve">
+                            <input class="form-check-input" type="radio" <%= issue.status == 'Resolve' ? ' checked' : '' %> name="optionStat" id="resolve" value="Resolve">
                             <label class="form-check-label" for="resolve">
                                 Resolve
                             </label>
                             <div class="col-sm-8">
-                                <input class="form-check-input" type="radio" name="optionStat" id="new"
+                                <input class="form-check-input" type="radio" <%= issue.status == 'Feedback' ? ' checked' : '' %> name="optionStat" id="new"
                                     value="Feedback">
                                 <label class="form-check-label" for="new">
                                     Feedback
                                 </label>
                             </div>
                             <div class="col-sm-8">
-                                <input class="form-check-input" type="radio" name="optionStat" id="closed"
+                                <input class="form-check-input" type="radio" <%= issue.status == 'Closed' ? ' checked' : '' %> name="optionStat" id="closed"
                                     value="Closed">
                                 <label class="form-check-label" for="closed">
                                     Closed
                                 </label>
                             </div>
-                            <input class="form-check-input" type="radio" name="optionStat" id="rejected"
+                            <input class="form-check-input" type="radio" <%= issue.status == 'Rejected' ? ' checked' : '' %> name="optionStat" id="rejected"
                                 value="Rejected">
                             <label class="form-check-label" for="rejected">
                                 Rejected
@@ -109,23 +109,23 @@
                     </div>
                     <div class="col-sm-8">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="optionPrior" id="bug" value="Normal">
+                            <input class="form-check-input" type="radio" <%= issue.priority == 'Normal' ? ' checked' : '' %> name="optionPrior" id="bug" value="Normal">
                             <label class="form-check-label" for="bug">
                                 Normal
                             </label>
                             <div class="col-sm-8">
-                                <input class="form-check-input" type="radio" name="optionPrior" id="feature"
+                                <input class="form-check-input" type="radio" <%= issue.priority == 'High' ? ' checked' : '' %> name="optionPrior" id="feature"
                                     value="High">
                                 <label class="form-check-label" for="feature">
                                     High
                                 </label>
                             </div>
-                            <input class="form-check-input" type="radio" name="optionPrior" id="support" value="Urgent">
+                            <input class="form-check-input" type="radio" <%= issue.priority == 'Urgent' ? ' checked' : '' %> name="optionPrior" id="support" value="Urgent">
                             <label class="form-check-label" for="support">
                                 Urgent
                             </label>
                             <div class="col-sm-8">
-                                <input class="form-check-input" type="radio" name="optionPrior" id="feature"
+                                <input class="form-check-input" <%= issue.priority == 'Immediate' ? ' checked' : '' %> type="radio" name="optionPrior" id="feature"
                                     value="Immediate">
                                 <label class="form-check-label" for="feature">
                                     Immediate
@@ -196,7 +196,7 @@
                         </label>
                     </div>
                     <div class="col-sm-8">
-                        <input type="range" id="done" name="done" min="0" max="100">
+                        <input type="range" value="<%= issue.done %>" id="done" name="done" min="0" max="100">
                     </div>
                 </div>
 
@@ -220,7 +220,7 @@
                         </label>
                     </div>
                     <div class="col-sm-8">
-                        <input class="form-control" type="number" name="targetVer" id="targetVer">
+                        <input class="form-control" step="0.01" type="number" name="targetVer" value="<%= issue.targetversion %>" id="targetVer">
                     </div>
                 </div>
 
@@ -269,7 +269,7 @@
                         </label>
                     </div>
                     <div class="col-sm-8">
-                        <input class="form-control" type="date" name="closedDate" id="closedDate">
+                        <input class="form-control" type="date" name="closedDate" id="closedDate" value="">
                     </div>
                 </div>
 
@@ -287,7 +287,7 @@
                     <div class="col-sm-2"></div>
                     <div class="col-sm-2">
                         <button class="btn btn-dark btn-plus-styling" type="button" onclick="add()" name="add-button"
-                            id="add-button">Add</button>
+                            id="add-button">+</button>
                     </div>
                 </div>
 
@@ -295,10 +295,13 @@
                     <div class="col-sm-2"></div>
                     <div class="col-sm-2"> 
                     <table class="table-striped-dark col-sm-6">
+                        <thead>
                       <tr>
                         <th>Image</th>
                         <th>File</th>
                       </tr>
+                    </thead>
+                    <tbody>
                       <tr>
                         <td>
                           <% if(issue.files){ %> 
@@ -306,15 +309,19 @@
                             <% issue.files.forEach(file => { %> 
                               <% if(file.type == "image/png"){ %> 
                             <li class="mb-4" id="list-image">
-                              <a href="<%= file ? `${baseUrl}/images/upload/${file.name}` : '' %>" target="_blank">
+                              <a href="<%= file ? `${baseUrl}/images/upload/${file.name}` : '' %>" target="_blank" >
+                                <img src="<%= file ? `${baseUrl}/images/upload/${file.name}` : ''%>" alt="" width="70">
                               </a>
+                              
                              
                                 <input type="hidden" value="<%= file.name %>" name="fileDb">
                                 <input type="hidden" value="<%= file.type %>" name="typeDb">
                                
+                               
                             </li>
+                           
                             <% }})} %> 
-                            
+                            <button type="button" class="btn btn-danger btn-sm" id="image-delete">-</button>
                           </ul>
                         </td>
                         <td>
@@ -322,17 +329,19 @@
                           <ul>
                             <% issue.files.forEach(file => { %> 
                               <% if(file.type !== "image/png" ){ %> 
-                            <li class="list-image">
-                              <a target="_blank" href="<%= file ? `${baseUrl}/images/upload/${file.name}` : '' %>"><%= file.name %></a>
+                            <li class="list-file" id="list-file">
+                              <a target="_blank" href="<%= file ? `${baseUrl}/images/upload/${file.name}` : '' %>">
+                            <img src="<%= file ? `${baseUrl}/images/upload/${file.name}` : '' %>" alt="" width="70"></a>
                               <input type="hidden" value="<%= file.name %>" name="fileDb">
                               <input type="hidden" value="<%= file.type %>" name="typeDb">
-                               
                             </li>
                             <% }})} %> 
-                              
+                            <button type="button" class="btn btn-danger btn-sm" id="file-delete">-</button> 
+
                           </ul>
                         </td>
                       </tr>
+                    </tbody>
                     </table>
                     </div>
                   </div>
@@ -364,6 +373,26 @@
                 $("#files").prop('required', true)
                 $("#add-button").before(input)
             }
+            
+           $("#image-delete").click(function(){
+               $('#list-image').remove()
+               if($('#list-image').length == 0){
+                   $("#image-delete").hide()
+                   $('#image-delete').remove()
+               }
+           });
+
+           $("#file-delete").click(function(){
+               $("#list-file").remove()
+               if($("#list-file").length == 0){
+                   $("#file-delete").hide()
+                   $("#file-delete").remove()
+               }
+           })
+
+           
+
+
         </script>
 
         <%- include('../../partials/footer') %>

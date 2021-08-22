@@ -14,61 +14,27 @@
                             aria-label="default input example" name="pname" id="pname">
                     </div>
                 </div>
-                    <div class="row my-3">
+                
+
+                <% names.forEach((name)=>{ %>
+                    <div class="row mb-3">
                         <div class="col-sm-1"></div>
-                        <div class="col-sm-1">
-                            <label class="form-check-label" id="projectNama" name="projectNama">Employees
-                        </div>
                         <div class="col-sm-8">
-                            <select class="form-select ;" aria-label="Default select example" id="namelist"
-                                name="namelist">
-                                <option selected hidden>Choose The Members</option>
-                                <% names.forEach((name)=>{ %>
-                                    <option value="<%= name.userid %>">
-                                        <%= name.firstname + ' ' + name.lastname %>
-                                    </option>
-                                    <% }) %>
-                            </select>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="namelist" id="namelist"
+                                    value="<%=name.userid%>">
+                                    <input type="text" name="position" hidden id="position" value="<%= name.position %>">
+                                <label class="form-check-label" for="namelist">
+                                    <%= name.firstname + ' ' + name.lastname %>
+                                </label>
+                               
+                            </div>
                         </div>
                     </div>
-                  
-                        <div class="row mb-3">
-                            <div class="col-sm-1"></div>
-                            <div class="col-sm-8">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="idOpt" id="idOpt"
-                                        value="Manager">
-                                    <label class="form-check-label" for="idOpt">
-                                         Manager
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-1"></div>
-                            <div class="col-sm-8">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="idOpt" id="idOpt"
-                                        value="Software Developer">
-                                    <label class="form-check-label" for="idOpt">
-                                         Software Developer
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-1"></div>
-                            <div class="col-sm-8">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="idOpt" id="idOpt"
-                                        value="Quality Assurance">
-                                    <label class="form-check-label" for="idOpt">
-                                         Quality Assurance
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                
+                    <% }) %>
+                    
+
+
                         <div class="row mb-3">
                             <div class="col-sm-1"></div>
                             <div class="col-sm-1">
@@ -80,7 +46,7 @@
                         </div>
             </form>
         </div>
-        
+
     </body>
 
     </html>

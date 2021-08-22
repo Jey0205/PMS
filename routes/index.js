@@ -200,7 +200,7 @@ module.exports = function (db) {
         let basename = 'Members'
         const url = req.url == `/members/${projectid}` ? `/members/${projectid}?page=1` : `${req.url}`
         const page = parseInt(req.query.page) || 1;
-        const limitTab = 3
+        var limitTab = 3
         let offset = (page - 1) * limitTab;
         let name = req.query.name
         let position = req.query.position
@@ -214,17 +214,17 @@ module.exports = function (db) {
         if (position) {
             params.push(`members.role = '${position}'`)
         }
-        let querys = `select members.id, members.userid,  users.firstname as name, members.role as position FROM members LEFT JOIN users USING (userid) where projectid = ${projectid} order by members.id limit 3 offset 0;
+        let querys = `select members.id, members.userid,  users.firstname as name, members.role as position FROM members INNER JOIN users USING (userid) where projectid = ${projectid} order by users.firstname limit ${limitTab} offset ${offset};
         `
-        let queryCount = `select members.id,  users.firstname as name, members.role as position FROM members LEFT JOIN users USING (userid) where projectid = ${projectid}  order by members.id`
+        let queryCount = `select members.id,  users.firstname as name, members.role as position FROM members INNER JOIN users USING (userid) where projectid = ${projectid}  order by users.firstname`
 
         if (params.length > 0) {
-            querys = `select members.id, members.userid, users.firstname as name, members.role as position FROM members LEFT JOIN users USING (userid) where projectid = ${projectid} and `;
-            queryCount = `select members.id, users.firstname as name, members.role as position FROM members LEFT JOIN users USING (userid) where projectid = ${projectid} and `;
+            querys = `select members.id, members.userid, users.firstname as name, members.role as position FROM members INNER JOIN users USING (userid) where projectid = ${projectid} and `;
+            queryCount = `select members.id, users.firstname as name, members.role as position FROM members INNER JOIN users USING (userid) where projectid = ${projectid} and `;
 
             querys += ` ${params.join(" and ")} limit ${limitTab} offset ${offset}`
 
-            queryCount += `${params}`
+            queryCount += `${params.join(" and ")} order by users.firstname`
         }
 
         db.query(queryCount, (err, result) => {
@@ -243,7 +243,7 @@ module.exports = function (db) {
                             if (err) {
                                 throw err;
                             }
-                            db.query('select users.userid, users.firstname,users.position from users order by users.userid', (err, result) => {
+                            db.query('select users.userid, users.firstname,users.position from users order by users.firstname', (err, result) => {
                                 if (err) {
                                     throw err
                                 }
@@ -287,7 +287,7 @@ module.exports = function (db) {
             if (err) {
                 throw err
             }
-            db.query('select * from projects', (err, pros) => {
+            db.query('select * from projects where projectid = $1', [projectid], (err, pros) => {
                 if (err) {
                     throw err
                 }
@@ -303,8 +303,21 @@ module.exports = function (db) {
     })
     router.post('/members/:projectid/addmember', helpers.isLoggedIn, (req, res, next) => {
         const projectid = req.params.projectid
-        db.query('insert into members(userid, role, projectid) values($1,$2,$3)', [req.body.userid, req.body.role, projectid])
-            .then(res.redirect(`/members/${projectid}`))
+        let sql = "insert into members(userid, role, projectid) values";
+            for (let i = 0; i < req.body.namecheck.length; i++) {
+                if (i < req.body.namecheck.length - 1) {
+                  sql += `(${req.body.namecheck[i]}, '${req.body.role}', ${projectid}),`;
+                }
+                if (i == req.body.namecheck.length - 1) {
+                  sql += `(${req.body.namecheck[i]}, '${req.body.role}', ${projectid})`;
+                }
+              }
+              db.query(sql, (err) =>{
+                  if(err){
+                      throw err
+                  }
+                  res.redirect(`/members/${projectid}`)
+              })
     })
 
     /* Option Member */
@@ -327,7 +340,7 @@ module.exports = function (db) {
     router.get('/members/:projectid/edit/:userid', helpers.isLoggedIn, (req, res, next) => {
         const projectid = req.params.projectid
         let basename = 'Edit Members'
-        db.query('select * from users', (err, names) => {
+        db.query('select * from users ', (err, names) => {
             if (err) {
                 throw err
             }
@@ -349,9 +362,12 @@ module.exports = function (db) {
 
     router.post('/members/:projectid/edit/:userid', helpers.isLoggedIn, (req, res, next) => {
         const projectid = req.params.projectid
-        db.query(`update members set userid = $1, role = $2, projectid = $3 where userid = $4 `, [req.body.namelist, req.body.poscheck, req.body.proslist, req.params.userid])
-            .then(res.redirect(`/members/${projectid}`))
-            .catch(err => { throw err })
+        db.query(`update members set role = $1 where userid = $2 and projectid = $3`, [req.body.poslist, req.params.userid ,projectid], (err) => {
+            if (err) {
+                throw err
+            }
+            res.redirect(`/members/${projectid}`)
+        })
     })
 
 

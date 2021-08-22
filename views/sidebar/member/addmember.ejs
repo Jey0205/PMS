@@ -8,48 +8,26 @@
                 <div id="addmeth" name="addmeth">
                     <form action="" method="POST" class="">
                         <input type="hidden" name="page" value="1">
-                        <div class="row my-3">
-                            <div class="col-sm-1"></div>
-                            <div class="col-sm-1">
-                                <label class="form-check-label" id="projectNama" name="projectNama">Nama
-                            </div>
-                            <div class="col-sm-8">
-                                <select class="form-select" aria-label="Default select example" id="userid" name="userid">
-                                    <option selected hidden>Choose The Position</option>
-                                    <% user.forEach((role)=>{ %>
-                                        <option value="<%= role.userid %>">
-                                            <%= role.firstname + " " + role.lastname %>
-                                        </option>
-                                        <% }) %>
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="row my-3">
+                        <% user.forEach((name) => { %>
+                            <div class="row mb-3">
                                 <div class="col-sm-1"></div>
-                                <div class="col-sm-1">
-                                    <label class="form-check-label" id="projectNama" name="projectNama">Job Desk
-                                </div>
                                 <div class="col-sm-8">
-                                    <select class="form-select" aria-label="Default select example" id="role" name="role">
-                                        <option selected hidden>Choose The Position</option>
-                                            <option value="Manager">
-                                                Manager
-                                            </option>
-                                            <option value="Software Developer">
-                                                Software Developer
-                                            </option>
-                                            <option value="Quality Assurance">
-                                                Quality Assurance
-                                            </option>
-                                    </select>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="namecheck" id="idOpt"
+                                            value="<%=name.userid%>">
+                                        <label class="form-check-label" for="idOpt">
+                                             <%= name.firstname %> <%= name.lastname%>
+                                        </label>
+                                        <input type="hidden" name="role" value="<%= name.position %>">
+                                    </div>
                                 </div>
-                            </div>
-
-                                    <div class="row mb-3">
+                                <% }) %>
+        
+        
+                                    <div class="row my-5">
                                         <div class="col-sm-1"></div>
                                         <div class="col-sm-1">
-                                            <button  class="btn btn-primary" type="submit">Save</Button>
+                                            <input class="btn btn-primary" type="submit" value="Save">
                                         </div>
                                         <div class="col-sm-2">
                                             <a href="/members/<%= projectid %>" class="btn btn-danger">Cancel</a>

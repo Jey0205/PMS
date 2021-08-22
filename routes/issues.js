@@ -14,6 +14,7 @@ module.exports = function (db) {
     const url = req.url == `/issues/${projectid}` ? `/issues/${projectid}?page=1` : `${req.url}`
     const page = parseInt(req.query.page) || 1;
     const limitTab = 3
+    const baseUrl = `http://${req.headers.host}`
     let offset = (page - 1) * limitTab;
     let issueid = req.query.issueid
     let subject = req.query.subject
@@ -30,12 +31,12 @@ module.exports = function (db) {
     if (tracker) {
       params.push(`issues.tracker = '${tracker}'`)
     }
-    let querys = `select * from issues where projectid = ${projectid} order by issueid limit ${limitTab} offset ${offset}`
+    let querys = `select issues.*,users.firstname,users.lastname from issues,users where projectid = ${projectid} and assignee = userid order by issueid limit ${limitTab} offset ${offset}`
 
     let queryCount = `select count (*) as total from issues where projectid = ${projectid}`
 
     if (params.length > 0) {
-      querys = `select * from issues where projectid = ${projectid} and `;
+      querys = `select issues.*,users.firstname,users.lastname from issues,users where projectid = ${projectid} and assignee = userid and `;
       queryCount = `select count (*) as total from issues where projectid = ${projectid} and `;
 
       querys += `${params.join(" and ")} order by issueid limit 3 offset ${offset}`
@@ -55,20 +56,24 @@ module.exports = function (db) {
           "select optionisu from users where userid = $1", [req.session.user.userid], (err, option) => {
             if (err) {
               throw err;
-            } res.render("../views/sidebar/issues/issues", {
-              data: data.rows,
-              optionisu: option.rows[0].optionisu,
-              projectid,
-              issueid,
-              subject,
-              tracker,
-              pages,
-              page,
-              url,
-              session: req.session.user,
-              info: req.flash('info'),
-              success: req.flash('success'),
-              base: basename
+            } 
+              res.render("../views/sidebar/issues/issues", {
+                data: data.rows,
+                optionisu: option.rows[0].optionisu,
+                projectid,
+                issueid,
+                subject,
+                tracker,
+                pages,
+                page,
+                url,
+                session: req.session.user,
+                info: req.flash('info'),
+                success: req.flash('success'),
+                base: basename,
+                moment: moment,
+                baseUrl
+              
             });
           });
       });
@@ -127,7 +132,7 @@ module.exports = function (db) {
 
     if (!req.files) {
       return db.query(
-        "insert into issues(projectid, tracker, subject, description, status, priority, assignee, startdate, duedate, estimatedtime, done, author, createddate) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, now())",
+        "insert into issues(projectid, tracker, subject, description, status, priority, assignee, startdate, duedate, estimatedtime, done, author, createddate, targetversion) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, now(), 1.00)",
         [
           projectid,
           req.body.options,
@@ -172,7 +177,7 @@ module.exports = function (db) {
     if (req.files.file) {
       console.log(manyFiles);
       db.query(
-        "insert into issues(projectid, tracker, subject, description, status, priority, assignee, startdate, duedate, estimatedtime, done, files, author, createddate) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, now())",
+        "insert into issues(projectid, tracker, subject, description, status, priority, assignee, startdate, duedate, estimatedtime, done, files, author, createddate,targetversion) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, now(), 1.00)",
         [
           projectid,
           req.body.options,

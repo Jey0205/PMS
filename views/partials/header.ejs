@@ -26,7 +26,7 @@
                 <a class="nav-link" href="/profile">Profile</a>
               </li>
               <li>
-                <a class="nav-link"  href="/register" id="add-user">Add User</a>
+                <a class="nav-link" <%= session.role !== 'admin' ? 'hidden' : ''%> href="/users" id="add-user">User</a>
               </li>
             </ul>
             <div class="col-sm-5">
@@ -44,6 +44,9 @@
       <script>
         function out(){
           alert(`You're logging out!`)
+        }
+        if(session.role != 'admin'){
+          $('#add-user').remove()
         }
 
       </script>

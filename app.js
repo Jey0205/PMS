@@ -25,7 +25,7 @@ const developmentDB = {
   port: 5432
 }
 
-const isDevelopment = true
+const isDevelopment = false
 const { Pool } = require('pg')
 let pool = null
 if (isDevelopment) {
@@ -40,6 +40,7 @@ var loginRouter = require('./routes/login')(pool);
 var profileRouter = require('./routes/profile')(pool);
 var projectRouter = require('./routes/project')(pool);
 var issuesRouter = require('./routes/issues')(pool);
+var usersRouter = require('./routes/users')(pool)
 
 var app = express();
 
@@ -63,6 +64,7 @@ app.use('/login', loginRouter);
 app.use('/profile', profileRouter);
 app.use('/project', projectRouter);
 app.use('/issues', issuesRouter);
+app.use('/users', usersRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

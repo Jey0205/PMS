@@ -3,7 +3,7 @@
     <body>
         <form action="" method="POST" class="">
             <input type="hidden" name="page" value="1">
-            <div class="row my-3">
+            <!-- <div class="row my-3">
                 <div class="col-sm-1"></div>
                 <div class="col-sm-1">
                     <label class="form-check-label" >ID
@@ -11,16 +11,48 @@
                 <div class="col-sm-8">
                     <input class="form-control" readonly type="text" aria-label="default input example" name="projectid" id="projectid" value="<%= data.projectid %>">
                 </div>
-            </div>
+            </div> -->
             <div class="row my-3">
                 <div class="col-sm-1"></div>
                 <div class="col-sm-1">
-                    <label class="form-check-label" > Nama Project
+                    <label class="form-check-label" >Nama Project
                 </div>
                 <div class="col-sm-8">
                     <input class="form-control" type="text"aria-label="default input example" name="name" id="name" value="<%= data.name %>">
                 </div>
             </div>
+
+            <% names.forEach((name)=>{ %>
+                <div class="row mb-3">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-8">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" <%= name.userid ? ' checked' : '' %> name="namelist" id="namelist"
+                                value="<%=name.userid%>">
+                                <input type="text" name="position" hidden id="position" value="<%= name.position %>">
+                            <label class="form-check-label" for="namelist">
+                                <%= name.firstname + ' ' + name.lastname %>
+                            </label>
+                           
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+                <% undone.forEach((undone)=>{ %>
+                    <div class="row mb-3">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-8">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" <%= undone.userid ? '' : ' checked' %> name="namelist" id="namelist"
+                                    value="<%=undone.userid%>">
+                                    <input type="text" name="unposition" hidden id="unposition" value="<%= undone.position %>">
+                                <label class="form-check-label" for="unnamelist">
+                                    <%= undone.firstname + ' ' + undone.lastname %>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
 
             <div class="row mb-3">
                 <div class="col-sm-1"></div>

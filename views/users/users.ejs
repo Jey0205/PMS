@@ -1,0 +1,230 @@
+<%- include('../partials/header') %>
+
+    <div class="container-fluid">
+
+        <div class="row mb-3 border-bottom">
+            <h2 style="font-family: monospace;">Users</h2>
+        </div>
+        <h3 style="font-family: monospace;">Filter</h3>
+
+        <form action="" method="GET">
+            <input type="hidden" name="page" value="1">
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <input class="form-check-input" type="checkbox" id="checkUserid" name="checkUserid"
+                        onclick="useridclick()" <%=userid ? ' checked' : '' %> >User ID
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="number" placeholder="ID ..." aria-label="default input example"
+                        name="userid" id="userid" <%=userid ? '' : ' disabled' %> >
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <input class="form-check-input" type="checkbox" id="checkName" onclick="nameclick()" <%=name
+                        ? ' checked' : '' %> >Name
+                </div>
+                <div class="col-sm-8">
+                    <input class="form-control" type="text" placeholder="Name ..." aria-label="default input example"
+                        id="name" name="name" <%=name ? '' : ' disabled' %> >
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <input class="form-check-input" type="checkbox" id="checkPosition" name="checkPosition"
+                        onclick="positionclick()" <%=position ? ' checked' : '' %> >Position
+                </div>
+                <div class="col-sm-8">
+                    <select class="form-select ;" aria-label="Default select example" id="position" name="position"
+                        <%=position ? '' : ' disabled' %> >
+                        <option selected hidden>Choose The Position...</option>
+                        <% data.forEach((pos)=>{ %>
+                            <option value="<%= pos.position %>">
+                                <%= pos.position %>
+                            </option>
+                            <% }) %>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <input class="btn btn-primary" type="submit" value="Search">
+                </div>
+                <div class="col-sm-2">
+                    <a href="/users" class="btn btn-danger">Reset</a>
+                </div>
+            </div>
+        </form>
+
+        <form action="" method="POST">
+            <h3 style="font-family: monospace;">Options</h3>
+
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <label for="position">Column
+                </div>
+                <div class="col-sm-8">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="idOpt" id="idOpt" <%=optionusers['idOpt']
+                            ? ' checked' : '' %> >
+                        <label class="form-check-label" for="idOpt">
+                            User ID
+                        </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input class="form-check-input" type="checkbox" name="nameOpt" id="nameOpt"
+                            <%=optionusers['nameOpt'] ? ' checked' : '' %> >
+                        <label class="form-check-label" for="nameOpt">
+                            Name
+                        </label>
+                    </div>
+                    <input class="form-check-input" type="checkbox" name="posOpt" id="posOpt" <%=optionusers['posOpt']
+                        ? ' checked' : '' %> >
+                    <label class="form-check-label" for="posOpt">
+                        Position
+                    </label>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-1">
+                    <input class="btn btn-sm btn-primary" type="submit" value="Apply">
+                </div>
+            </div>
+        </form>
+
+        <form action="">
+            <table class="table table-dark table-stripped">
+                <thead>
+                    <tr>
+                        <% if(optionusers['idOpt']) { %>
+                            <th id="tableId">#</th>
+                            <% } if(optionusers['nameOpt']) { %>
+                                <th id="tableName">Name</th>
+                                <% } if(optionusers['posOpt']) {%>
+                                    <th id="tableMembers">Position</th>
+                                    <% } %>
+                                        <th>Action</th>
+                    </tr>
+                </thead>
+                <% data.forEach((item,index)=>{ %>
+                    <tbody>
+                        <tr>
+                            <% if(optionusers['idOpt']) { %>
+                                <td>
+                                    <%= index + 1 %>
+                                </td>
+                                <% } if(optionusers['nameOpt']) { %>
+                                    <td>
+                                        <%= item.firstname + ' ' + item.lastname %>
+                                    </td>
+                                    <% } if(optionusers['posOpt']) {%>
+                                        <td>
+                                            <%= item.position %>
+                                        </td>
+                                        <% } %>
+                                            <td>
+                                                <a href="/users/edit/<%= item.userid %>"
+                                                    class="btn btn-success">Edit</a>
+                                                <a href="/users/delete/<%= item.userid %>"
+                                                    class="btn btn-danger">Delete</a>
+                                            </td>
+
+                        </tr>
+                    </tbody>
+                    <% }) %>
+            </table>
+            <div class="justify-content-center">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item <%= page > 1 ? '' : 'disabled' %> ">
+                            <a class="page-link"
+                                href="<%= url.replace(`page=${page}`, `page=${page - 1}`)%>">Previous</a>
+                        </li>
+                        <% for(let i=1; i <=pages; i++){ %>
+                            <li class="page-item <%= page == i ? 'active' : '' %> "><a class="page-link"
+                                    href="<%= url.replace(`page=${page}`, `page=${i}`) %>">
+                                    <%= i %>
+                                </a></li>
+                            <% } %>
+                                <li class="page-item <%= page < pages ? '' : 'disabled' %> ">
+                                    <a class="page-link"
+                                        href="<%= url.replace(`page=${page}`, `page=${page + 1}`)%>">Next</a>
+                                </li>
+                    </ul>
+                </nav>
+            </div>
+
+
+        </form>
+
+        <div class="row my-3">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-1">
+                <a href="/users/add" class="btn btn-primary">Add</a>
+            </div>
+        </div>
+
+        <% if(success.length> 0) { %>
+            <div class="alert alert-success text-center" id="fade-success" role="alert">
+                <%= success %>
+            </div>
+            <% } %>
+
+                <% if(info.length> 0) { %>
+                    <div class="alert alert-danger text-center" id="fade-alert" role="alert">
+                        <%= info %>
+                    </div>
+                    <% } %>
+    </div>
+
+    <script type="text/javascript">
+
+        $('#fade-alert').fadeOut(5000)
+        $('#fade-success').fadeOut(5000)
+
+        function del() {
+            $("#delete-button").on('click', confirm('Are You Sure?'), function () {
+                if (false) {
+                    $('#delete-button', href = "#")
+                }
+            })
+        }
+
+
+        function useridclick() {
+            const check = document.getElementById('checkUserid')
+            if (check.checked == true) {
+                document.getElementById('userid').disabled = false;
+            } else {
+                document.getElementById('userid').disabled = true;
+            }
+        }
+
+
+        function nameclick() {
+            const check = document.getElementById('checkName')
+            if (check.checked == true) {
+                document.getElementById('name').disabled = false;
+            } else {
+                document.getElementById('name').disabled = true;
+            }
+        }
+
+        function positionclick() {
+            const check = document.getElementById('checkPosition')
+            if (check.checked == true) {
+                document.getElementById('position').disabled = false;
+            } else {
+                document.getElementById('position').disabled = true;
+            }
+        }
+    </script>
+
+    <%- include('../partials/footer') %>

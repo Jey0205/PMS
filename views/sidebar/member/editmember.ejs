@@ -11,77 +11,28 @@
                     <div class="row my-3">
                         <div class="col-sm-1"></div>
                         <div class="col-sm-1">
-                            <label class="form-check-label" id="projectNama" name="projectNama">Members Name
+                            <label class="form-check-label" id="projectNama" name="projectNama">Role:
                         </div>
                         <div class="col-sm-8">
-                            <select class="form-select ;" aria-label="Default select example" id="namelist"
-                                name="namelist">
-                                <option selected hidden>Choose The Members</option>
-                                <% nama.forEach((name)=>{ %>
-                                    <option value="<%= name.userid %>">
-                                        <%= name.firstname + ' ' + name.lastname %>
+                            <select class="form-select ;" aria-label="Default select example" id="poslist"
+                                name="poslist">
+                                <option selected hidden><%= nama.position %></option>
+                                    <option value="Manager" id="poslist"
+                                    name="poslist" >
+                                        Manager
                                     </option>
-                                    <% }) %>
+                                    <option value="Software Developer" id="poslist"
+                                    name="poslist">
+                                        Software Developer
+                                    </option>
+                                    <option value="Quality Assurance" id="poslist"
+                                    name="poslist">
+                                        Quality Assurance
+                                    </option>
                             </select>
                         </div>
                     </div>
-                    <!-- <div class="row my-3">
-                        <div class="col-sm-1"></div>
-                        <div class="col-sm-1">
-                            <label class="form-check-label" id="projectNama" name="projectNama">Daftar Project
-                        </div>
-                        <div class="col-sm-8">
-                            <select class="form-select ;" aria-label="Default select example" id="proslist"
-                                name="proslist">
-                                <option selected hidden>Choose The Projects</option>
-                                <% project.forEach((project)=>{ %>
-                                    <option value="<%= project.projectid %>">
-                                        <%= project.name %>
-                                    </option>
-                                    <% }) %>
-                            </select>
-                        </div>
-                    </div> -->
-
-                    <div class="row mb-3">
-                        <div class="col-sm-1"></div>
-                        <div class="col-sm-8">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="poscheck" id="idOpt"
-                                    value="Manager">
-                                <label class="form-check-label" for="idOpt">
-                                     Manager
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-sm-1"></div>
-                        <div class="col-sm-8">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="poscheck" id="idOpt"
-                                    value="Software Developer">
-                                <label class="form-check-label" for="idOpt">
-                                     Software Developer
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-sm-1"></div>
-                        <div class="col-sm-8">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="poscheck" id="idOpt"
-                                    value="Quality Assurance">
-                                <label class="form-check-label" for="idOpt">
-                                     Quality Assurance
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-       
-
-
+                  
                             <div class="row mb-3">
                                 <div class="col-sm-1"></div>
                                 <div class="col-sm-1">
