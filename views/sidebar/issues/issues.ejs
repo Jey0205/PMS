@@ -251,9 +251,9 @@
                                                                                     <%}%>
                                                                         <td>
                                                                             <a href="/issues/<%= projectid %>/editissues/<%= item.issueid %>" 
-                                                                                class="btn btn-success"><%= data.status == 'Closed' ? 'Edit' : 'Preview' %></a>
+                                                                                class="btn btn-success"><%= item.status == 'Closed' ? ' Preview' : 'Edit' %></a>
                                                                             <a href="/issues/<%= projectid %>/deleteissues/<%= item.issueid %>" <%= session.role !== 'admin' ? 'hidden' : ''%>
-                                                                                class="btn btn-danger" <%= data.status == 'Closed' ? '' : 'hidden' %>
+                                                                                class="btn btn-danger" <%= item.status == 'Closed' ? 'hidden' : '' %>
                                                                                 onclick="del()" id="delete-button">Delete</a>
                                                                         </td>
         
