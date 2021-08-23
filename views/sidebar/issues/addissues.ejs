@@ -28,7 +28,7 @@
                     </div>
                     <div class="col-sm-8">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="options" id="bug" value="Bug">
+                            <input class="form-check-input" type="radio" checked name="options" id="bug" value="Bug">
                             <label class="form-check-label" for="bug">
                                 Bug
                             </label>
@@ -54,7 +54,8 @@
                         </label>
                     </div>
                     <div class="col-sm-8">
-                        <input class="form-control" type="text" name="subject" id="subject">
+                        <input class="form-control" type="text" name="subject" placeholder="Put the subject..."
+                            id="subject">
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -65,9 +66,7 @@
                         </label>
                     </div>
                     <div class="col-sm-8">
-                        <textarea name="description" id="description" cols="126" rows="3">
-
-                        </textarea>
+                        <textarea name="description" id="description" cols="126" rows="3"></textarea>
                     </div>
                 </div>
                 <div class="row my-3">
@@ -77,7 +76,7 @@
                     </div>
                     <div class="col-sm-8">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="optionStat" id="new" value="New">
+                            <input class="form-check-input" type="radio" checked name="optionStat" id="new" value="New">
                             <label class="form-check-label" for="new">
                                 New
                             </label>
@@ -121,7 +120,8 @@
                     </div>
                     <div class="col-sm-8">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="optionPrior" id="bug" value="Normal">
+                            <input class="form-check-input" type="radio" checked name="optionPrior" id="bug"
+                                value="Normal">
                             <label class="form-check-label" for="bug">
                                 Normal
                             </label>
@@ -170,14 +170,14 @@
                         </label>
                     </div>
                     <div class="col-sm-8">
-                        <input class="form-control" type="date" name="startDate" id="startDate">
+                        <input class="form-control" type="date" value="<%=today%>" name="startDate" id="startDate">
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-sm-1"></div>
                     <div class="col-sm-1">
                         <label for="tracker">
-                            Start Date
+                            Due Date
                         </label>
                     </div>
                     <div class="col-sm-8">
@@ -192,7 +192,8 @@
                         </label>
                     </div>
                     <div class="col-sm-8">
-                        <input class="form-control" type="number" step="0.01" name="estimatedTime" id="estimatedTime">
+                        <input class="form-control" type="number" value="0"  step="0.01" name="estimatedTime"
+                            id="estimatedTime">
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -203,7 +204,7 @@
                         </label>
                     </div>
                     <div class="col-sm-8">
-                        <input type="range" id="done" name="done" min="0" max="100">
+                        <input type="range" id="done" name="done" value="0" min="0" max="100">
                     </div>
                 </div>
                 <div class="row mb-3" id="add">
@@ -256,6 +257,10 @@
                 $("#files").prop('required', true)
                 $("#add-button").before(input)
             }
+
+            
+
+
         </script>
 
         <%- include('../../partials/footer') %>

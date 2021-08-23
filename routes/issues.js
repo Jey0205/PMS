@@ -94,6 +94,7 @@ module.exports = function (db) {
   router.get('/:projectid/addissues', helpers.isLoggedIn, (req, res, next) => {
     const projectid = req.params.projectid
     let basename = 'Add Issues'
+    let today = Date.now()
     db.query('select firstname,lastname,userid from users', (err, names) => {
       if (err) {
         throw err
@@ -108,6 +109,7 @@ module.exports = function (db) {
           project: projects.rows,
           info: req.flash('info'),
           session: req.session.user,
+          today: today,
           base: basename
         })
       })
@@ -262,7 +264,7 @@ module.exports = function (db) {
     const manyFiles = []
     if (!req.files && !req.body.fileDb) {
       if (req.body.optionStat == "Closed") {
-        return db.query(`update issues set tracker = $1, subject = $2, description = $3, status = $4, priority = $5, assignee = $6, estimatedtime = $7, done = $8, spenttime = $9, targetversion = $10, author = $11, updateddate = now(), closeddate = $12, files = null where issueid = ${issueid} returning *`,
+        return db.query(`update issues set tracker = $1, subject = $2, description = $3, status = $4, priority = $5, assignee = $6, estimatedtime = $7, done = $8, spenttime = $9, targetversion = $10, author = $11, updateddate = now(), closeddate = now(), files = null where issueid = ${issueid} returning *`,
           [req.body.options,
           req.body.subject,
           req.body.description,
@@ -273,8 +275,7 @@ module.exports = function (db) {
           req.body.done,
           req.body.spentTime,
           req.body.targetVer,
-          req.session.user.userid,
-          req.body.closedDate],
+          req.session.user.userid],
           (err, edit) => {
             if (err) {
               throw err
@@ -287,7 +288,7 @@ module.exports = function (db) {
               })
           })
       } else {
-        return db.query(`update issues set tracker = $1, subject = $2, description = $3, status = $4, priority = $5, assignee = $6, estimatedtime = $7, done = $8, spenttime = $9, targetversion = $10, author = $11, updateddate = now(), closeddate = $12, files = null where issueid = ${issueid} returning *`,
+        return db.query(`update issues set tracker = $1, subject = $2, description = $3, status = $4, priority = $5, assignee = $6, estimatedtime = $7, done = $8, spenttime = $9, targetversion = $10, author = $11, updateddate = now(), files = null where issueid = ${issueid} returning *`,
           [req.body.options,
           req.body.subject,
           req.body.description,
@@ -298,8 +299,7 @@ module.exports = function (db) {
           req.body.done,
           req.body.spentTime,
           req.body.targetVer,
-          req.session.user.userid,
-          req.body.closedDate],
+          req.session.user.userid],
           (err, edit) => {
             if (err) {
               throw err
@@ -434,7 +434,7 @@ module.exports = function (db) {
     }
     if (req.body.fileDb || req.files.file) {
       if (req.body.optionStat == 'Closed') {
-        return db.query(`update issues set tracker = $1, subject = $2, description = $3, status = $4, priority = $5,assignee = $6, estimatedtime = $7, done = $8, spenttime = $9, targetversion = $10, author = $11, updateddate = now(), closeddate = $12, files = $13 where issueid = ${issueid} returning *`,
+        return db.query(`update issues set tracker = $1, subject = $2, description = $3, status = $4, priority = $5,assignee = $6, estimatedtime = $7, done = $8, spenttime = $9, targetversion = $10, author = $11, updateddate = now(), closeddate = now(), files = $12 where issueid = ${issueid} returning *`,
           [req.body.options,
           req.body.subject,
           req.body.description,
@@ -446,7 +446,6 @@ module.exports = function (db) {
           req.body.spentTime,
           req.body.targetVer,
           req.session.user.userid,
-          req.body.closedDate,
             manyFiles],
           (err, edit) => {
             if (err) {
@@ -460,7 +459,7 @@ module.exports = function (db) {
               })
           })
       } else {
-        return db.query(`update issues set tracker = $1, subject = $2, description = $3, status = $4, priority = $5,assignee = $6, estimatedtime = $7, done = $8, spenttime = $9, targetversion = $10, author = $11, updateddate = now(), closeddate = $12, files = $13 where issueid = ${issueid} returning *`,
+        return db.query(`update issues set tracker = $1, subject = $2, description = $3, status = $4, priority = $5,assignee = $6, estimatedtime = $7, done = $8, spenttime = $9, targetversion = $10, author = $11, updateddate = now(), files = $12 where issueid = ${issueid} returning *`,
           [req.body.options,
           req.body.subject,
           req.body.description,
@@ -472,7 +471,6 @@ module.exports = function (db) {
           req.body.spentTime,
           req.body.targetVer,
           req.session.user.userid,
-          req.body.closedDate,
             manyFiles],
           (err, edit) => {
             if (err) {
