@@ -11,6 +11,7 @@ module.exports = function (db) {
 
   router.get('/:projectid', helpers.isLoggedIn, (req, res, next) => {
     const projectid = req.params.projectid
+    const issue = req.params.issueid
     const url = req.url == `/issues/${projectid}` ? `/issues/${projectid}?page=1` : `${req.url}`
     const page = parseInt(req.query.page) || 1;
     const limitTab = 3
@@ -72,7 +73,8 @@ module.exports = function (db) {
                 success: req.flash('success'),
                 base: basename,
                 moment: moment,
-                baseUrl
+                baseUrl,
+                issue
               
             });
           });
@@ -491,11 +493,18 @@ module.exports = function (db) {
   /* Delete Issues */
   router.get('/:projectid/deleteissues/:issueid', helpers.isLoggedIn, helpers.isAdmin, (req, res, next) => {
     const projectid = req.params.projectid
+    db.query('delete from activity where issueid = $1',[req.params.issueid],(err) =>{
+      if(err){
+        throw err
+      }
     db.query('delete from issues where issueid = $1', [req.params.issueid], (err) => {
       if (err) {
         throw err
       }
-      req.flash('success', 'Delete Complete')
+        req.flash('success', 'Delete Complete')
+        res.redirect(`/issues/${projectid}`)
+
+      })
     })
 
   })

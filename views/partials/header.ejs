@@ -36,18 +36,21 @@
           </div>
             
             <form class="sign-out" method="GET">
-              <a href="/logout" class="btn btn-light" onclick="out()">Logout</a>
+              <a href="/logout" class="btn btn-light" id="logout">Logout</a>
             </form>
           </div>
         </div>
       </nav>
       <script>
-        function out(){
-          alert(`You're logging out!`)
-        }
-        if(session.role != 'admin'){
-          $('#add-user').remove()
-        }
+
+        $('#logout').click(function(){
+          if(confirm('Are You Sure Wanna Log-out?')){
+            $('#logout').attr('href','/logout')
+          }else{
+            return false
+          }
+        })
+
 
       </script>
 </head>

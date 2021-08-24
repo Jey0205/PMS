@@ -321,8 +321,8 @@
 
             function del(){
         $("#delete-button").on('click',confirm('Are You Sure?'), function(){
-           if(false){
-               $('#delete-button',href="#")
+           if(confirm() == false){
+               $('#delete-button').attr('href','/issues')
            } 
         })
     }
