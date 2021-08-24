@@ -289,10 +289,11 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row my-3">
                     <div class="col-sm-2"></div>
                     <div class="col-sm-2"> 
-                    <table class="table-striped-dark col-sm-6">
+                    <table class="table table-striped-dark col-sm-6">
+
                         <thead>
                       <tr>
                         <th>Image</th>
@@ -301,6 +302,7 @@
                     </thead>
                     <tbody>
                       <tr>
+                          <div class="row my-3">
                         <td>
                           <% if(issue.files){ %> 
                           <ul>
@@ -319,9 +321,11 @@
                             </li>
                            
                             <% }})} %> 
-                            <button type="button" class="btn btn-danger btn-sm" <%= issue.status == 'Closed' ? 'hidden' : '' %> id="image-delete">-</button>
+                            <button type="button" class="btn btn-danger btn-sm" <%= issue.status == 'Closed' ? 'hidden' : '' %>  id="image-delete">-</button>
                           </ul>
                         </td>
+                    </div>
+                    <div class="row my-3">
                         <td>
                           <% if(issue.files){ %> 
                           <ul>
@@ -334,10 +338,10 @@
                               <input type="hidden" value="<%= file.type %>" name="typeDb">
                             </li>
                             <% }})} %> 
-                            <button type="button" class="btn btn-danger btn-sm" <%= issue.status == 'Closed' ? 'hidden' : '' %> id="file-delete">-</button> 
-
+                            <button type="button" class="btn btn-danger btn-sm" <%= issue.status == 'Closed' ? 'hidden' : '' %>  id="file-delete">-</button> 
                           </ul>
                         </td>
+                    </div>
                       </tr>
                     </tbody>
                     </table>
@@ -388,8 +392,13 @@
                }
            })
 
-           
+           if($("#list-image").length == 0){
+               $("#image-delete").remove()
+           }
 
+           if($("#list-file").length == 0){
+               $("#file-delete").remove()
+           }
 
         </script>
 
