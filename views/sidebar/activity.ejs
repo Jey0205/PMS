@@ -11,12 +11,12 @@
             <div class="card" style="width: 50rem; height: 20rem;">
                 <div class="card-body">
                     <p>Activity</p>
-                    <p><%= `From ${moment(from).format("MM/DD/YYYY")} to ${moment(now).format("MM/DD/YYYY")}` %></p>
+                    <p><%= `From ${moment(from).utcOffset('+0700').format("MM/DD/YYYY")} to ${moment(now).utcOffset('+0700').format("MM/DD/YYYY")}` %></p>
                     <% for(const dayName in result){ %> 
-                      <p><%= dayName == moment(new Date()).format("dddd") ? 'Today' : dayName %> </p>
+                      <p><%= dayName == moment(new Date()).utcOffset('+0700').format("dddd") ? 'Today' : dayName %> </p>
                       <ul>
                         <% result[dayName].data.forEach(item => { %> 
-                      <li><%= moment(item.time).format("HH:mm") %> <%= item.title %> #<%= item.issueid %> (<%= item.description %>): Description, author: <%= item.firstname %> </li>
+                      <li><%= moment(item.time).utcOffset('+0700').format("HH:mm") %> <%= item.title %> #<%= item.issueid %> (<%= item.description %>): Description, author: <%= item.firstname %> </li>
                       <% }) %> 
                     </ul>
                     <% } %> 
