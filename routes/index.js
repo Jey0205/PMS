@@ -287,18 +287,13 @@ module.exports = function (db) {
             if (err) {
                 throw err
             }
-            db.query('select * from projects where projectid = $1', [projectid], (err, pros) => {
-                if (err) {
-                    throw err
-                }
                 res.render('../views/sidebar/member/addmember', {
                     user: names.rows,
-                    pros: pros.rows,
                     projectid,
                     session: req.session.user,
                     base: basename
                 })
-            })
+            
         })
     })
     router.post('/members/:projectid/addmember', helpers.isLoggedIn, (req, res, next) => {
@@ -306,12 +301,13 @@ module.exports = function (db) {
         let sql = "insert into members(userid, role, projectid) values";
             for (let i = 0; i < req.body.namecheck.length; i++) {
                 if (i < req.body.namecheck.length - 1) {
-                  sql += `(${req.body.namecheck[i]}, '${req.body.role}', ${projectid}),`;
+                  sql += `(${req.body.namecheck[i]}, '${req.body.role[i]}', ${projectid}),`;
                 }
                 if (i == req.body.namecheck.length - 1) {
-                  sql += `(${req.body.namecheck[i]}, '${req.body.role}', ${projectid})`;
-                }
+                  sql += `(${req.body.namecheck[i]}, '${req.body.role[i]}', ${projectid})`;
+                } 
               }
+              
               db.query(sql, (err) =>{
                   if(err){
                       throw err
